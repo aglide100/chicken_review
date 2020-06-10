@@ -14,32 +14,29 @@ import (
 	"github.com/aglide100/chicken_review_webserver/pkg/db"
 )
 
-/*
-
 func main() {
-
 	if err := realMain(); err != nil {
 		fmt.Errorf("%v", err)
 	}
 }
-*/
-func main() {
+
+func realMain() error {
 	log.Printf("start realMain")
 
-	listenAddr := os.Getenv("LISTEN_ADDR")
-	listenPort := os.Getenv("LISTEN_PORT")
+	//listenAddr := os.Getenv("LISTEN_ADDR")
+	//listenPort := os.Getenv("LISTEN_PORT")
 	dbAddr := os.Getenv("DB_ADDR")
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 
-	addr := net.JoinHostPort(listenAddr, listenPort)
+	//addr := net.JoinHostPort(listenAddr, listenPort)
 
 	dbport, _ := strconv.Atoi(dbPort)
 	myDB, err := db.ConnectDB(dbAddr, dbport, dbUser, dbPassword, dbName)
 	if err != nil {
-		fmt.Errorf("connecting to DB: %v", err)
+		return fmt.Errorf("connecting to DB: %v", err)
 	}
 
 	defaultCtrl := &controllers.DefaultController{}
@@ -70,13 +67,12 @@ func main() {
 	//rtr.AddRule("reviews", "GET", "^/reviews/ui/img/([0-9]+)/[a-z0-9A-Z_+.-.\\s.-]+.(?i)(img|jpg|jpeg|png|gif)$", reviewsCtrl.GetImage)
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/img/[a-z0-9A-Z_+.-.\\s.-]+.(?i)(img|jpg|jpeg|png|gif)$", reviewsCtrl.GetImage)
 
-	log.Println("tcp listen start addr: %v", addr)
-	ln, err := net.Listen("tcp", addr)
-	log.Println("declare listener")
+	// listenPort => 철자 오류로 뒤에서 고치기!!! listenPort -> extra string err
+	ln, err := net.Listen("tcp", ":80")
 	if err != nil {
-		fmt.Errorf("creating network listener: %v", err)
+		return fmt.Errorf("creating network listener: %v", err)
 	}
-	defer ln.Close()
+	//defer ln.Close()
 
 	srv := http.Server{Handler: rtr}
 	log.Printf("listening on address %q", ln.Addr().String())
@@ -84,7 +80,8 @@ func main() {
 	err = srv.Serve(ln)
 	log.Printf("starting server at address %q", ln.Addr().String())
 	if err != nil {
-		fmt.Errorf("serving: %v", err)
+		return fmt.Errorf("serving: %v", err)
 	}
 
+	return nil
 }
