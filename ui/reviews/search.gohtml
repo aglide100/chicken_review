@@ -12,16 +12,15 @@
     </tr>
 {{end}}
 
-{{define "search_view"}}
 
+{{define "search_view"}}
 {{range .}}
     {{template "search_view_item" .}}
 {{else}}
     <h3>No Result</h3>
-
+{{end}}
 {{end}}
 
-{{end}}
 
 {{define "content"}}
 <h3 onclick="location.href = '/reviews'";>Result</h3>

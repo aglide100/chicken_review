@@ -25,7 +25,7 @@ func ConnectDB(host string, port int, user, password, dbname string) (*Database,
 	return &Database{conn: db}, nil
 }
 
-func (db *Database) SearchReviews(name string, subject string) ([]*models.Review, error) {
+func (db *Database) SearchReviews(name string, subject string, operator string) ([]*models.Review, error) {
 
 	const q = `
 SELECT 
@@ -36,18 +36,30 @@ SELECT
 FROM 
 	review
 WHERE
-	$1 IN ($2)
+	$1 Like $2
 `
-	var reviews []*models.Review
-	reviews = nil
+	var allreviews []*models.Review
+	//allreviews = nil
 
 	switch subject {
 	case "Title", "Date", "Author":
 		// ok
 	default:
 		log.Printf("It is not subject type!")
-		return reviews, fmt.Errorf("What?")
+		return allreviews, fmt.Errorf("What?")
 	}
+
+	var logic string
+	switch operator {
+	case "AND":
+		logic = "%'"
+	case "OR":
+		logic = "_'"
+	default:
+		return allreviews, fmt.Errorf("Wrong operator!")
+	}
+
+	queryoperator := "'" + name + logic
 
 	var (
 		ID     int64
@@ -56,31 +68,32 @@ WHERE
 		Author string
 	)
 
-	rows, err := db.conn.Query(q, subject, name)
-	if err != nil {
-		return reviews, fmt.Errorf("querying: %v", err)
-	}
+	rows, err := db.conn.Query(q, subject, queryoperator)
 	defer rows.Close()
-
+	if err != nil {
+		return allreviews, fmt.Errorf("querying: %v", err)
+	}
 	for rows.Next() {
+		log.Printf("run search's rows start")
 		err := rows.Scan(&ID, &Title, &Date, &Author)
 		if err != nil {
 			return nil, fmt.Errorf("scanning rows: %v", err)
 		}
 
-		review := &models.Review{
+		Review := &models.Review{
 			ID:     ID,
 			Title:  Title,
 			Date:   Date,
 			Author: Author,
 		}
-		reviews = append(reviews, review)
+		allreviews = append(allreviews, Review)
+
 	}
 	err = rows.Err()
 	if err != nil {
 		return nil, fmt.Errorf("iterating over rows: %v", err)
 	}
-	return reviews, nil
+	return allreviews, nil
 }
 
 func (db *Database) GetLastInsertReviewID() (int64, error) {
@@ -250,6 +263,7 @@ ORDER BY ID ASC
 	}
 
 	for rows.Next() {
+		log.Printf("run list's rows start")
 		err := rows.Scan(&ID, &Title, &Date, &Author)
 		if err != nil {
 			return nil, fmt.Errorf("rows err : %v", err)

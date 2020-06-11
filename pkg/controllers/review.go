@@ -311,13 +311,15 @@ func (hdl *ReviewController) Search(resp http.ResponseWriter, req *http.Request)
 	req.ParseForm()
 
 	var (
-		name    string
-		subject string
+		name     string
+		subject  string
+		operator string
 	)
 	name = req.FormValue("name")
 	subject = req.FormValue("subject")
+	operator = req.FormValue("operator")
 
-	reviews, err := hdl.db.SearchReviews(name, subject)
+	reviews, err := hdl.db.SearchReviews(name, subject, operator)
 	if err != nil {
 		log.Printf("listing reviews: %v", err)
 		http.Error(resp, err.Error(), http.StatusInternalServerError)
