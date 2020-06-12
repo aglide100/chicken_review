@@ -36,17 +36,18 @@ SELECT
 FROM 
 	review
 WHERE
-	$1 Like $2
-`
-	var allreviews []*models.Review
-	//allreviews = nil
+	$1 LIKE $2
+	`
+
+	var allReviews []*models.Review
+	allReviews = nil
 
 	switch subject {
 	case "Title", "Date", "Author":
 		// ok
 	default:
 		log.Printf("It is not subject type!")
-		return allreviews, fmt.Errorf("What?")
+		return allReviews, fmt.Errorf("Invalid!")
 	}
 
 	var logic string
@@ -56,7 +57,7 @@ WHERE
 	case "OR":
 		logic = "_'"
 	default:
-		return allreviews, fmt.Errorf("Wrong operator!")
+		return allReviews, fmt.Errorf("Wrong operator!")
 	}
 
 	queryoperator := "'" + name + logic
@@ -68,16 +69,17 @@ WHERE
 		Author string
 	)
 
+	log.Printf("subject:%v, queryoperator:%v, name:%v", subject, queryoperator, name)
+
 	rows, err := db.conn.Query(q, subject, queryoperator)
-	defer rows.Close()
+
 	if err != nil {
-		return allreviews, fmt.Errorf("querying: %v", err)
+		return allReviews, fmt.Errorf("There are no reviews : %v", err)
 	}
 	for rows.Next() {
-		log.Printf("run search's rows start")
 		err := rows.Scan(&ID, &Title, &Date, &Author)
 		if err != nil {
-			return nil, fmt.Errorf("scanning rows: %v", err)
+			return nil, fmt.Errorf("rows err : %v", err)
 		}
 
 		Review := &models.Review{
@@ -86,14 +88,11 @@ WHERE
 			Date:   Date,
 			Author: Author,
 		}
-		allreviews = append(allreviews, Review)
 
+		allReviews = append(allReviews, Review)
 	}
-	err = rows.Err()
-	if err != nil {
-		return nil, fmt.Errorf("iterating over rows: %v", err)
-	}
-	return allreviews, nil
+
+	return allReviews, nil
 }
 
 func (db *Database) GetLastInsertReviewID() (int64, error) {
@@ -263,7 +262,6 @@ ORDER BY ID ASC
 	}
 
 	for rows.Next() {
-		log.Printf("run list's rows start")
 		err := rows.Scan(&ID, &Title, &Date, &Author)
 		if err != nil {
 			return nil, fmt.Errorf("rows err : %v", err)

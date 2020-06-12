@@ -60,7 +60,8 @@ func realMain() error {
 
 	rtr.AddRule("reviews", "GET", "^/delete/([0-9]+)$", reviewsCtrl.Delete)
 
-	rtr.AddRule("reviews", "GET", "^/reviews/search/", reviewsCtrl.Search)
+	//rtr.AddRule("reviews", "GET", "^/reviews/search/", reviewsCtrl.Search)
+	rtr.AddRule("reviews", "POST", "^/reviews/search/post", reviewsCtrl.Search)
 
 	rtr.AddRule("reviews", "GET", "^/img", reviewsCtrl.GetImage)
 
