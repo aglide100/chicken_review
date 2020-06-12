@@ -36,7 +36,10 @@ SELECT
 FROM 
 	review
 WHERE
-	$1 LIKE $2
+	$1 IN (
+		$2
+	) 
+ORDER BY ID ASC
 	`
 
 	var allReviews []*models.Review
@@ -60,7 +63,7 @@ WHERE
 		return allReviews, fmt.Errorf("Wrong operator!")
 	}
 
-	queryoperator := "'" + name + logic
+	queryoperator := name
 
 	var (
 		ID     int64
@@ -69,7 +72,7 @@ WHERE
 		Author string
 	)
 
-	log.Printf("subject:%v, queryoperator:%v, name:%v", subject, queryoperator, name)
+	log.Printf("subject:%v, queryoperator:%v, name:%v, logic:%v", subject, queryoperator, name, logic)
 
 	rows, err := db.conn.Query(q, subject, queryoperator)
 
@@ -243,7 +246,8 @@ SELECT
 	Title, 
 	Date, 
 	Author 
-FROM review
+FROM 
+	review
 ORDER BY ID ASC
 	`
 	var (
