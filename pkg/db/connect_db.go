@@ -25,6 +25,40 @@ func ConnectDB(host string, port int, user, password, dbname string) (*Database,
 	return &Database{conn: db}, nil
 }
 
+func GetReviewFromQuerryList(rows *sql.Rows) ([]*models.Review, error) {
+	var allReviews []*models.Review
+
+	var (
+		ID     int64
+		Title  string
+		Date   string
+		Author string
+	)
+
+	for rows.Next() {
+		err := rows.Scan(&ID, &Title, &Date, &Author)
+		if err != nil {
+			return nil, fmt.Errorf("rows err : %v", err)
+		}
+
+		Review := &models.Review{
+			ID:     ID,
+			Title:  Title,
+			Date:   Date,
+			Author: Author,
+		}
+
+		allReviews = append(allReviews, Review)
+	}
+	err := rows.Err()
+	if err != nil {
+		log.Printf("nothing!")
+	}
+
+	return allReviews, nil
+
+}
+
 func (db *Database) SearchReviews(name string, subject string, operator string) ([]*models.Review, error) {
 
 	const q = `
@@ -63,38 +97,18 @@ ORDER BY ID ASC
 		return allReviews, fmt.Errorf("Wrong operator!")
 	}
 
-	queryoperator := name
-
-	var (
-		ID     int64
-		Title  string
-		Date   string
-		Author string
-	)
+	queryoperator := "'" + name + "'"
 
 	log.Printf("subject:%v, queryoperator:%v, name:%v, logic:%v", subject, queryoperator, name, logic)
 
 	rows, err := db.conn.Query(q, subject, queryoperator)
-
 	if err != nil {
 		return allReviews, fmt.Errorf("There are no reviews : %v", err)
 	}
-	for rows.Next() {
-		err := rows.Scan(&ID, &Title, &Date, &Author)
-		if err != nil {
-			return nil, fmt.Errorf("rows err : %v", err)
-		}
-
-		Review := &models.Review{
-			ID:     ID,
-			Title:  Title,
-			Date:   Date,
-			Author: Author,
-		}
-
-		allReviews = append(allReviews, Review)
+	allReviews, err = GetReviewFromQuerryList(rows)
+	if err != nil {
+		return allReviews, fmt.Errorf("rows Error! %v", err)
 	}
-
 	return allReviews, nil
 }
 
@@ -250,13 +264,6 @@ FROM
 	review
 ORDER BY ID ASC
 	`
-	var (
-		ID     int64
-		Title  string
-		Date   string
-		Author string
-	)
-
 	var allReviews []*models.Review
 	allReviews = nil
 	rows, err := db.conn.Query(q)
@@ -265,25 +272,9 @@ ORDER BY ID ASC
 		return allReviews, fmt.Errorf("There are no reviews : %v", err)
 	}
 
-	for rows.Next() {
-		err := rows.Scan(&ID, &Title, &Date, &Author)
-		if err != nil {
-			return nil, fmt.Errorf("rows err : %v", err)
-		}
-
-		Review := &models.Review{
-			ID:     ID,
-			Title:  Title,
-			Date:   Date,
-			Author: Author,
-		}
-
-		allReviews = append(allReviews, Review)
-	}
-	err = rows.Err()
+	allReviews, err = GetReviewFromQuerryList(rows)
 	if err != nil {
-		log.Printf("nothing!")
+		return allReviews, fmt.Errorf("rows Error! %v", err)
 	}
-
 	return allReviews, nil
 }

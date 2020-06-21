@@ -1,8 +1,8 @@
 {{define "login_view"}}
-<article>
-    <form name="loginForm" action="/reviews/login">
-        <input type="text" placeholder="ID">
-        <input type="text" placeholder="PASSWORD">
+<article class="loginForm">
+    <form name="loginForm" action="/reviews/login/logIn" method="post">
+        <input type="text" name="UserID" placeholder="ID">
+        <input type="text" name="UserPWD" placeholder="PASSWORD">
         <input type="submit">
     </form>
 </article>
@@ -12,6 +12,16 @@
     }
     // add multi provider auth 
 </script>
+<style type="text/css" media="screen">
+    .loginForm{
+        border:1px solid gray;
+        background-color: #999;
+        border-width: 1px 0;
+        border-collapse: collapse;
+        text-align: center;
+        padding:8px;
+    }
+</style>
 
 {{end}}
 

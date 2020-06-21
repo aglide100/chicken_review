@@ -18,4 +18,5 @@ func (view reviewLoginView) ContentType() string {
 
 func (view reviewLoginView) Render(w io.Writer) error {
 	return view.htmlctx.RenderUsing(w, "ui/reviews/login.gohtml", nil)
+	// if (check status) -> view.htmlctx.RenderUsing(w, "ui/reviews/login_status.gohtml", nil)
 }

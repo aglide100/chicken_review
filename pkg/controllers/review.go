@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/gob"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -15,14 +16,20 @@ import (
 	"github.com/aglide100/chicken_review_webserver/pkg/db"
 	"github.com/aglide100/chicken_review_webserver/pkg/models"
 	"github.com/aglide100/chicken_review_webserver/pkg/views"
+	"github.com/gorilla/sessions"
 )
 
 type ReviewController struct {
-	db *db.Database
+	db    *db.Database
+	store *sessions.CookieStore
 }
 
-func NewReviewController(db *db.Database) *ReviewController {
-	return &ReviewController{db: db}
+type User struct {
+	name string
+}
+
+func NewReviewController(db *db.Database, store *sessions.CookieStore) *ReviewController {
+	return &ReviewController{db: db, store: store}
 }
 
 func findString(resp http.ResponseWriter, req *http.Request, str string) (id int, orderType string, pagenumber int) {
@@ -246,6 +253,7 @@ func SaveReview(resp http.ResponseWriter, req *http.Request, hdl *ReviewControll
 
 	for i := 0; i < checklistnum; i++ {
 		for k := 0; k < blacklistnum; k++ {
+			// Check threat
 			result := strings.Replace(req.PostFormValue(checklist[i]), blacklist[k], "Alert", -1)
 			if result != req.PostFormValue(checklist[i]) {
 				return nil, err, true, result
@@ -378,8 +386,15 @@ func (hdl *ReviewController) List(resp http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (hdl *ReviewController) Login(resp http.ResponseWriter, req *http.Request) {
+func (hdl *ReviewController) LogIn(resp http.ResponseWriter, req *http.Request) {
 	log.Printf("recevie request to login view")
+
+	gob.Register(&User{})
+
+	session, _ := hdl.store.Get(req, "session-name")
+	session.Values["user"] = &User{"test"}
+	session.Save(req, resp)
+	log.Printf("save session, id: %v pwd: %v", req.PostFormValue("UserID"), req.PostFormValue("UserPWD"))
 
 	view := views.NewReviewLoginView(views.DefaultBaseHTMLContext)
 	resp.Header().Set("Content-Type", view.ContentType())
@@ -387,4 +402,18 @@ func (hdl *ReviewController) Login(resp http.ResponseWriter, req *http.Request) 
 	if err != nil {
 		log.Printf("faild to render : %v", err)
 	}
+}
+
+func (hdl *ReviewController) LoginCheck(resp http.ResponseWriter, req *http.Request) {
+	log.Printf("receive request to LoginCheck")
+	session, _ := hdl.store.Get(req, "session-name")
+	log.Println(session.Values["user"])
+	if session.Values["user"] == nil {
+		http.Redirect(resp, req, "/login", 301)
+	}
+
+}
+func (hdl *ReviewController) LogOut(resp http.ResponseWriter, req *http.Request) {
+	log.Printf("receive request to LogOut")
+
 }

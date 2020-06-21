@@ -5,12 +5,11 @@
         <h2>StoreName : {{.StoreName}}</h2>
         <h2>{{.Title}}</h2>
         <img src="{{.DefaultPictureURL}}" style="width:60%; height:30%;" id="DefaultPictureURL" onerror="document.getElementById(this.id).remove()" onclick="location.href = '{{.DefaultPictureURL}}';"/>
-       
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwlNqAEil52XRPHmSVb4Luk18qQG9GqcM&sensor=false&language=en" type="text/javascript"></script>
+
+    <!--Insert Map api -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwlNqAEil52XRPHmSVb4Luk18qQG9GqcM&sensor=false&language=en" type="text/javascript"></script>
     <script type="text/javascript"> 
     function initialize() {
-
-    
     var myLatlng = new google.maps.LatLng(37.556911,126.918694);
 
     var myOptions = {
@@ -33,6 +32,7 @@
     window.onload=function() {
         initialize();
     }
+    // Maps api end
 
     function btnDelete() {
         var check = confirm("delete review?");
@@ -43,8 +43,6 @@
         
     }
     </script>
-    
-        
     </header>
     
     <details class="details">
@@ -62,6 +60,10 @@
         <button type="button" onclick="location.href = '/update/{{.ID}}'";>Update review</button>
         <button type="button" onclick=btnDelete();>Delete review</button>
     </footer>
+</article>
+<article class="content">
+    <!-- comment article -->
+
 </article>
 
 <style type="text/css" media="screen">

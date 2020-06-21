@@ -10,6 +10,8 @@ import (
 
 	"github.com/aglide100/chicken_review_webserver/pkg/controllers"
 	"github.com/aglide100/chicken_review_webserver/pkg/router"
+	"github.com/gorilla/securecookie"
+	"github.com/gorilla/sessions"
 
 	"github.com/aglide100/chicken_review_webserver/pkg/db"
 )
@@ -19,6 +21,8 @@ func main() {
 		fmt.Errorf("%v", err)
 	}
 }
+
+var store = sessions.NewCookieStore(securecookie.GenerateRandomKey(32))
 
 func realMain() error {
 	log.Printf("start realMain")
@@ -41,12 +45,16 @@ func realMain() error {
 
 	defaultCtrl := &controllers.DefaultController{}
 	notFoundCtrl := &controllers.NotFoundController{}
-	reviewsCtrl := controllers.NewReviewController(myDB)
+	reviewsCtrl := controllers.NewReviewController(myDB, store)
 
 	rtr := router.NewRouter(notFoundCtrl)
 
+	sessions.NewSession(store, "session-name")
+
 	rtr.AddRule("default", "GET", "^/$", defaultCtrl.ServeHTTP)
-	rtr.AddRule("reviews", "GET", "/login$", reviewsCtrl.Login)
+	rtr.AddRule("reviews", "GET", "/login$", reviewsCtrl.LoginCheck)
+	rtr.AddRule("reviews", "POST", "/login/logIn", reviewsCtrl.LogIn)
+	rtr.AddRule("reviews", "GET", "/login/logout", reviewsCtrl.LogOut)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/?$", reviewsCtrl.List)
 	rtr.AddRule("reviews", "GET", "^reviews/([A-Z]{1,3	})-pagenumber=([0-9]+)$", reviewsCtrl.List)
