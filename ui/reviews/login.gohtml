@@ -1,15 +1,21 @@
 {{define "login_view"}}
 <article class="loginForm">
-    <form name="loginForm" action="/reviews/login/logIn" method="post">
+    <form name="loginForm" action="/login/log_In" method="post">
         <input type="text" name="UserID" placeholder="ID">
         <input type="text" name="UserPWD" placeholder="PASSWORD">
-        <input type="submit">
+        <input type="submit" value="Sign In" onclick=Submit()>
     </form>
+    <button onclick=GoToRegPage()>Sign Up</button>
 </article>
 <script>
     function Submit() {
         document.loginForm.submit();
     }
+
+    function GoToRegPage() {
+        location.href = '/login/register';
+    }
+
     // add multi provider auth 
 </script>
 <style type="text/css" media="screen">

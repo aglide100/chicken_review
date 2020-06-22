@@ -34,7 +34,6 @@ func realMain() error {
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
-
 	//addr := net.JoinHostPort(listenAddr, listenPort)
 
 	dbport, _ := strconv.Atoi(dbPort)
@@ -45,6 +44,7 @@ func realMain() error {
 
 	defaultCtrl := &controllers.DefaultController{}
 	notFoundCtrl := &controllers.NotFoundController{}
+	loginCtrl := controllers.NewLoginController(myDB, store)
 	reviewsCtrl := controllers.NewReviewController(myDB, store)
 
 	rtr := router.NewRouter(notFoundCtrl)
@@ -52,9 +52,13 @@ func realMain() error {
 	sessions.NewSession(store, "session-name")
 
 	rtr.AddRule("default", "GET", "^/$", defaultCtrl.ServeHTTP)
-	rtr.AddRule("reviews", "GET", "/login$", reviewsCtrl.LoginCheck)
-	rtr.AddRule("reviews", "POST", "/login/logIn", reviewsCtrl.LogIn)
-	rtr.AddRule("reviews", "GET", "/login/logout", reviewsCtrl.LogOut)
+
+	rtr.AddRule("login", "GET", "/login/register_page", loginCtrl.Register)
+	rtr.AddRule("login", "POST", "/login/sing_up", loginCtrl.Register)
+
+	rtr.AddRule("login", "GET", "/login", loginCtrl.LoginCheck)
+	rtr.AddRule("login", "POST", "/login/log_In", loginCtrl.LogIn)
+	rtr.AddRule("login", "GET", "/login/log_Out", loginCtrl.LogOut)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/?$", reviewsCtrl.List)
 	rtr.AddRule("reviews", "GET", "^reviews/([A-Z]{1,3	})-pagenumber=([0-9]+)$", reviewsCtrl.List)

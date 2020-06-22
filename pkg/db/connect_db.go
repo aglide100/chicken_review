@@ -278,3 +278,11 @@ ORDER BY ID ASC
 	}
 	return allReviews, nil
 }
+
+func (db *Database) RegisterNewUser(NewUser *models.User) error {
+	const q = `
+	
+	`
+
+	return nil
+}

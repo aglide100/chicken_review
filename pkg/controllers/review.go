@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/gob"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -24,16 +23,13 @@ type ReviewController struct {
 	store *sessions.CookieStore
 }
 
-type User struct {
-	name string
-}
-
 func NewReviewController(db *db.Database, store *sessions.CookieStore) *ReviewController {
 	return &ReviewController{db: db, store: store}
 }
 
 func findString(resp http.ResponseWriter, req *http.Request, str string) (id int, orderType string, pagenumber int) {
 	var matches []string
+	// pagenumber
 	Pnumber := 0
 
 	var showReviewPattern = regexp.MustCompile("^/reviews/([0-9]+$)")
@@ -85,7 +81,7 @@ func findString(resp http.ResponseWriter, req *http.Request, str string) (id int
 }
 
 func (hdl *ReviewController) GetImage(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("receive request to get image")
+	log.Printf("[review_func]: receive request to get image")
 
 	view := views.NewReviewGetImageView(views.DefaultBaseHTMLContext, req.URL.Path, "ReviewImage") // subdivided to ReviewImage and Favico
 	resp.Header().Set("Content-Type", view.ContentType())
@@ -97,7 +93,7 @@ func (hdl *ReviewController) GetImage(resp http.ResponseWriter, req *http.Reques
 }
 
 func (hdl *ReviewController) Create(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("receive request to create a review")
+	log.Printf("[review_func]: receive request to create a review")
 	view := views.NewReviewCreateView(views.DefaultBaseHTMLContext)
 
 	resp.Header().Set("Content-Type", view.ContentType())
@@ -108,7 +104,7 @@ func (hdl *ReviewController) Create(resp http.ResponseWriter, req *http.Request)
 }
 
 func (hdl *ReviewController) Revise(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("receive request to update a reivew")
+	log.Printf("[review_func]: receive request to update a reivew")
 
 	id, _, _ := findString(resp, req, "Update")
 
@@ -133,7 +129,7 @@ func (hdl *ReviewController) Revise(resp http.ResponseWriter, req *http.Request)
 }
 
 func (hdl *ReviewController) Delete(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("receive request to delete a review")
+	log.Printf("[review_func]: receive request to delete a review")
 
 	id, _, _ := findString(resp, req, "Delete")
 	log.Printf("Delete ID :%v", id)
@@ -209,7 +205,7 @@ func SaveImage(resp http.ResponseWriter, req *http.Request, hdl *ReviewControlle
 }
 
 func SaveReview(resp http.ResponseWriter, req *http.Request, hdl *ReviewController, ReviewType string) (*models.Review, error, bool, string) {
-
+	log.Printf("[review_func]: receive request save Review")
 	path, ok, err := SaveImage(resp, req, hdl)
 	if !ok {
 		log.Printf("There are no image!")
@@ -272,7 +268,7 @@ func SaveReview(resp http.ResponseWriter, req *http.Request, hdl *ReviewControll
 }
 
 func (hdl *ReviewController) Save(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("receive request to save a review")
+	log.Printf("[review_func]: receive request to save a review")
 
 	review, err, xss, str := SaveReview(resp, req, hdl, "Save")
 	if err != nil {
@@ -292,7 +288,7 @@ func (hdl *ReviewController) Save(resp http.ResponseWriter, req *http.Request) {
 }
 
 func (hdl *ReviewController) Update(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("receive request to update a review")
+	log.Printf("[review_func]: receive request to update a review")
 
 	id, _ := strconv.Atoi(req.PostFormValue("id"))
 
@@ -314,7 +310,7 @@ func (hdl *ReviewController) Update(resp http.ResponseWriter, req *http.Request)
 }
 
 func (hdl *ReviewController) Search(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("receive request to search review")
+	log.Printf("[review_func]: receive request to search review")
 
 	req.ParseForm()
 
@@ -343,7 +339,7 @@ func (hdl *ReviewController) Search(resp http.ResponseWriter, req *http.Request)
 }
 
 func (hdl *ReviewController) Get(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("receive request to get a review")
+	log.Printf("[review_func]: receive request to get a review")
 
 	id, _, _ := findString(resp, req, "Show")
 
@@ -367,7 +363,7 @@ func (hdl *ReviewController) Get(resp http.ResponseWriter, req *http.Request) {
 }
 
 func (hdl *ReviewController) List(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("receive request to list reviews")
+	log.Printf("[review_func]: receive request to list reviews")
 
 	_, orederType, pagenumber := findString(resp, req, "List")
 
@@ -384,36 +380,4 @@ func (hdl *ReviewController) List(resp http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Printf("failed to render : %v", err)
 	}
-}
-
-func (hdl *ReviewController) LogIn(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("recevie request to login view")
-
-	gob.Register(&User{})
-
-	session, _ := hdl.store.Get(req, "session-name")
-	session.Values["user"] = &User{"test"}
-	session.Save(req, resp)
-	log.Printf("save session, id: %v pwd: %v", req.PostFormValue("UserID"), req.PostFormValue("UserPWD"))
-
-	view := views.NewReviewLoginView(views.DefaultBaseHTMLContext)
-	resp.Header().Set("Content-Type", view.ContentType())
-	err := view.Render(resp)
-	if err != nil {
-		log.Printf("faild to render : %v", err)
-	}
-}
-
-func (hdl *ReviewController) LoginCheck(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("receive request to LoginCheck")
-	session, _ := hdl.store.Get(req, "session-name")
-	log.Println(session.Values["user"])
-	if session.Values["user"] == nil {
-		http.Redirect(resp, req, "/login", 301)
-	}
-
-}
-func (hdl *ReviewController) LogOut(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("receive request to LogOut")
-
 }

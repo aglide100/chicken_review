@@ -1,0 +1,47 @@
+{{define "register_view"}}
+    <article>
+        <form name="registerForm" action="/login/sing_up" method="post">
+            <input type="text" name="UserID" placeholder="ID">
+            <input type="text" name="UserPWD" placeholder="PASSWORD">
+            <input type="text" name="UserPWD" placeholder="Your Name">
+            <input type="text" name="UserPWD" placeholder="addr">
+            <input type="text" name="UserPWD" placeholder="PhoneNumber">
+            
+            <select name="Language">
+                <optiom value="Englsh">Englsh</optiom>
+                <optiom value="Korean">Korean</optiom>
+                <optiom value="Englsh">Englsh</optiom>
+            </select>
+            
+            <input type="submit" value="Sing Up" onclick=Submit()>
+        </form>
+    </article>
+
+
+
+    <script    src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script    src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/sha256.js"></script>
+    <script>
+
+        var message = "Led Zeppelin- Stairway to Heaven"; 
+    
+        // 생성된 해쉬 값을 사용하면 평문 사용을 피할 수 있다.
+        var hashedPassword = CryptoJS.SHA256("1234").toString() ; 
+    
+        var encrypt = CryptoJS.AES.encrypt(message, hashedPassword);
+        var decrypted = CryptoJS.AES.decrypt(encrypt, hashedPassword );
+    
+        // 암호화 이전의 문자열은 toString 함수를 사용하여 추출할 수 있다.
+        var text = decrypted.toString(CryptoJS.enc.Utf8);
+
+        alert(message);
+
+        func Submit() {
+            document.registerForm.submit();
+        }
+    </script>
+{{end}}
+
+{{define "content"}}
+{{template "register_view" .}}
+{{end}}
