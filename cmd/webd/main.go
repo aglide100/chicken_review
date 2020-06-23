@@ -53,8 +53,8 @@ func realMain() error {
 
 	rtr.AddRule("default", "GET", "^/$", defaultCtrl.ServeHTTP)
 
-	rtr.AddRule("login", "GET", "/login/register_page", loginCtrl.Register)
-	rtr.AddRule("login", "POST", "/login/sing_up", loginCtrl.Register)
+	rtr.AddRule("login", "GET", "/login/register_page", loginCtrl.Register_Page)
+	rtr.AddRule("login", "POST", "/login/sign_up", loginCtrl.Register)
 
 	rtr.AddRule("login", "GET", "/login", loginCtrl.LoginCheck)
 	rtr.AddRule("login", "POST", "/login/log_In", loginCtrl.LogIn)
