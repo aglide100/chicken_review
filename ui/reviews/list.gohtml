@@ -9,26 +9,48 @@
         <td>
             {{.Date}}
         </td>
-
-    
     </tr>
-
-    
 {{end}}
 
+
+<!--Using default picture! -->
+{{define "list_view_pic_item"}}
+    <div onclick="location.href = '/reviews/{{.ID}}'" class="thumbnail">
+        <img src="reviews/{{.DefaultPictureURL}}" class="image" onerror="this.style.background = 'coral'" />
+        <div class="child">
+            <p>{{.Title}}  </p>
+            <hr size="0.5px"></hr>
+            <p class="comment">{{.Comment}}</p>
+            <p class="item_date">written by {{.Author}}, {{.Date}}</p>
+        </div>
+    </div>
+{{end}}
+
+<!--List Itme -->
 {{define "list_view"}}
 {{range .}}
     
     {{template "list_view_item" .}}
+{{end}}
+{{end}}
+
+{{define "list_view_Picture"}}
+{{range .}}
     
+    {{template "list_view_pic_item" .}}
 {{end}}
 {{end}}
 
 {{define "content"}}
-<div onclick="location.href = '/reviews/create'";>
+
+<div onclick="location.href = '/reviews/create'">
     <h3>Create a new review</h3>
 </div>
 
+<div class="image_list">
+    {{template "list_view_Picture" .}}
+</div>   
+<!--
 <table class="table">
         <tr>
             <th>Title</th>
@@ -36,8 +58,8 @@
             <th>Date</th>
         </tr>
         {{template "list_view" .}}
-    
 </table>
+-->
 
 <form action="/reviews/search/post" method="post" class="searchForm" id="search">
     <input type="text" name="name" >
@@ -54,6 +76,7 @@
     <input type="submit" value="Search" onclick=Search()>
 </form>
 
+
 <script>
     function Search() {
         document.searchForm.submit();
@@ -66,7 +89,8 @@
             margin-right: auto;
             
         }
-        
+
+        /*
         .table {
             width: 98%;
             margin: 5% 1% 7%;
@@ -74,10 +98,14 @@
         }
         .table td{
             border-style:dotted;
+            border-radius: 20px;
         }
         .table tr{
             padding-left: 20%;
             padding-right: 30%;
+        }
+        .table tr.hover{
+            opacity: 0.5;
         }
         .table th{
             background-color: #999;
@@ -96,6 +124,72 @@
         .even{
             background:  highlight;
         }
+        */
+
+
+        .image_list {
+            display:block;
+        }
+
+        .thumbnail { 
+            width:auto;
+            height:auto;
+            position:relative;
+
+            margin-bottom:2%;
+            
+            clear:both;
+            
+            /*
+            border-style:solid;
+            border-width:0.25px;
+            border-radius: 10px;
+            
+            */
+        }
+
+
+        .child {
+            float:right;
+            display: inline-block;
+        }
+        .item_date{
+            top:50%;
+        }
+
+
+        
+        .image {
+            float;left;
+            width:23%;
+            height:23%;
+        }
+
+        .comment {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; 
+            -webkit-box-orient: vertical;
+            word-wrap:break-word; 
+            line-height: 1.2em;
+            height: 3.6em; 
+        }
+
+        .thumbnail:after {
+            content:'';
+            position: absolute;
+            width: 100%; height:100%;
+            top:0; left:0;
+            background:rgba(0,0,0,0.6);
+            opacity: 0;
+            transition: all 1s;
+            -webkit-transition: all 1s;
+        }
+        .thumbnail:hover:after {
+            opacity:1;
+        }
+        
 
 
         

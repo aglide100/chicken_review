@@ -21,42 +21,72 @@
 </head>
 
 <style type="text/css" media="screen">
+    @import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+        .content {
+            font-family:Nanum Gothic;
+            font-size: medium;
+            margin-left: 5%;
+            margin-right: 5%;
+            width:90%;
+            float:left;
+        }
         
         nav {
-            float:left;
-            width:10%;
+            margin-right:8%;
+            padding:2%;
+            display:inline;
+            float:right;
         }
+        /*
         article {
-            width:82%;
+            width:80%;
             float:left;
             margin-left: 5%;
         }
+        */
         nav li {
             list-style-type: none;
-            text-align: left;
-            background-color: #f1f1f1;
-            padding: 2%;
-        }
-        nav li a {
-            
-            display: block;
-            color: #000;
-            text-decoration: none;
-            padding: 3%;
-        }
-        nav li a.active {
-            
-            background-color: #4CAF50;
-            color: white;
-        }
-        nav li a:hover:not(.active) {
-            background-color: #555;
-            color: white;
+            font-family:Nanum Gothic;
+            font-size: large;
+            /*background-color: #f1f1f1;*/
         }
 
+        nav li a {
+            position:relative;
+            width:3%;
+            color: #000;
+            text-decoration: none;
+        }
+
+        nav li a:after {
+            content:'';
+            position: absolute;
+            width: 100%; height:100%;
+            top:0; left:0;
+            background:rgba(0,0,0,0.6);
+            opacity: 0;
+            transition: all 1s;
+            -webkit-transition: all 1s;
+        }
+
+        nav li a:hover:after {
+            opacity:1;
+        }
+
+        /*
+        nav li a.active {
+            background-color: #4CAF50;
+            background-color: transparent;
+        }
         
+        nav li a:hover:not(.active) {
+            background-color: #555;
+            color: #777;
+            
+        }
+        */
         
 
         
 </style>
-{{- end}}
+{{end}}

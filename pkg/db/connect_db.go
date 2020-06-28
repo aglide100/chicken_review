@@ -29,23 +29,27 @@ func GetReviewFromQuerryList(rows *sql.Rows) ([]*models.Review, error) {
 	var allReviews []*models.Review
 
 	var (
-		ID     int64
-		Title  string
-		Date   string
-		Author string
+		ID                int64
+		Title             string
+		Date              string
+		Author            string
+		DefaultPictureURL string
+		Comment           string
 	)
 
 	for rows.Next() {
-		err := rows.Scan(&ID, &Title, &Date, &Author)
+		err := rows.Scan(&ID, &Title, &Date, &Author, &DefaultPictureURL, &Comment)
 		if err != nil {
 			return nil, fmt.Errorf("rows err : %v", err)
 		}
 
 		Review := &models.Review{
-			ID:     ID,
-			Title:  Title,
-			Date:   Date,
-			Author: Author,
+			ID:                ID,
+			Title:             Title,
+			Date:              Date,
+			Author:            Author,
+			DefaultPictureURL: DefaultPictureURL,
+			Comment:           Comment,
 		}
 
 		allReviews = append(allReviews, Review)
@@ -259,7 +263,9 @@ SELECT
 	ID,
 	Title, 
 	Date, 
-	Author 
+	Author,
+	DefaultPictureURL,
+	Comment
 FROM 
 	review
 ORDER BY ID ASC

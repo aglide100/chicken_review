@@ -1,18 +1,19 @@
 {{define "body"}}
 
 <body>
-    
+    <div>
+            <h2>Chicken review</h2>
+            <h5>We review Chicken</h5>
+    </div>
 
     <nav>
         <li>
-            <div class="login_stat">
-                <a href="/login">Login</a>
-            </div>
+            <a href="/login">Login</a>
             <a href="/reviews">Home</a>
             <a href="/reviews/create">Create</a>
         </li>
     </nav>
-    <article>
+    <article class="content">
         {{block "content" .Content}}
     {{/* This is shown if nothing overrides the "content" block. */}}
     <h1>Oups...!</h1>
