@@ -4,7 +4,7 @@
         <button type="button" onclick="location.href = '/'";>Go to home</button>
         <h2>StoreName : {{.StoreName}}</h2>
         <h2>{{.Title}}</h2>
-        <img src="{{.DefaultPictureURL}}" style="width:60%; height:30%;" id="DefaultPictureURL" onerror="document.getElementById(this.id).remove()" onclick="location.href = '{{.DefaultPictureURL}}';"/>
+        <img src="{{.DefaultPictureURL}}" id="DefaultPictureURL" onerror="document.getElementById(this.id).remove()" onclick="location.href = '{{.DefaultPictureURL}}';"/>
 
     <!--Insert Map api -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwlNqAEil52XRPHmSVb4Luk18qQG9GqcM&sensor=false&language=en" type="text/javascript"></script>
@@ -67,12 +67,14 @@
 </article>
 
 <style type="text/css" media="screen">
+    /*
     .content {
         background-color: rgba(93, 93, 93, 0.4);
         -moz-border-radius: 7px;
         -webkit-border-radius: 7px;
         padding: 0.5%
     }
+    */
 
     .details {
         -webkit-box-sizing: border-box;
@@ -84,6 +86,14 @@
     }
     .header {
        
+    }
+
+    .header img {
+        display: block;
+        max-width:40%;
+        max-height:30%;
+        width: auto;
+        height: auto;
     }
 </style>
 {{end}}

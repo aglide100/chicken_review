@@ -1,18 +1,40 @@
 {{define "body"}}
 
 <body>
-    <div>
+    <!-- Logo article -->
+    <div class="headlight">
             <h2>Chicken review</h2>
             <h5>We review Chicken</h5>
     </div>
 
-    <nav>
-        <li>
-            <a href="/login">Login</a>
-            <a href="/reviews">Home</a>
-            <a href="/reviews/create">Create</a>
-        </li>
-    </nav>
+
+    <!-- Navigation article -->
+    
+    <div class="nav">
+        <nav class="desc">
+            <li>
+                <a href="/login">Login</a>
+                <a href="/reviews">Home</a>
+                <a href="/reviews/create">Create</a>
+            </li>
+        </nav>
+    </div>
+
+    <div class="mobile_nav">
+        <details class="folding_menu">
+           <button text="hello"/>
+        <nav class="mobile_desc">
+            <li>
+                <a href="/login">Login</a>
+                <a href="/reviews">Home</a>
+                <a href="/reviews/create">Create</a>
+            </li>
+        </nav>
+        </details>
+    </div>
+
+
+    <!-- Content article -->
     <article class="content">
         {{block "content" .Content}}
     {{/* This is shown if nothing overrides the "content" block. */}}
