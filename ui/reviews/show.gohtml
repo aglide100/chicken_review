@@ -6,8 +6,9 @@
         <h2>{{.Title}}</h2>
         <img src="{{.DefaultPictureURL}}" id="DefaultPictureURL" onerror="document.getElementById(this.id).remove()" onclick="location.href = '{{.DefaultPictureURL}}';"/>
 
+
     <!--Insert Map api -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwlNqAEil52XRPHmSVb4Luk18qQG9GqcM&sensor=false&language=en" type="text/javascript"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{.GoogleMapsApi}}" type="text/javascript"></script>
     <script type="text/javascript"> 
     function initialize() {
     var myLatlng = new google.maps.LatLng(37.556911,126.918694);

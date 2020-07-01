@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/aglide100/chicken_review_webserver/pkg/controllers"
+	"github.com/aglide100/chicken_review_webserver/pkg/models"
 	"github.com/aglide100/chicken_review_webserver/pkg/router"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
@@ -34,6 +35,10 @@ func realMain() error {
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
+	GoogleMaps := os.Getenv("GOOGLE_MAPS_API_KEYS")
+
+	// Api keys(GoogleMaps)
+	APIKeys := &models.APIKeys{GoogleMaps: GoogleMaps}
 	//addr := net.JoinHostPort(listenAddr, listenPort)
 
 	dbport, _ := strconv.Atoi(dbPort)
@@ -45,7 +50,7 @@ func realMain() error {
 	defaultCtrl := &controllers.DefaultController{}
 	notFoundCtrl := &controllers.NotFoundController{}
 	loginCtrl := controllers.NewLoginController(myDB, store)
-	reviewsCtrl := controllers.NewReviewController(myDB, store)
+	reviewsCtrl := controllers.NewReviewController(myDB, store, APIKeys)
 
 	rtr := router.NewRouter(notFoundCtrl)
 

@@ -19,12 +19,13 @@ import (
 )
 
 type ReviewController struct {
-	db    *db.Database
-	store *sessions.CookieStore
+	db      *db.Database
+	store   *sessions.CookieStore
+	APIKeys *models.APIKeys
 }
 
-func NewReviewController(db *db.Database, store *sessions.CookieStore) *ReviewController {
-	return &ReviewController{db: db, store: store}
+func NewReviewController(db *db.Database, store *sessions.CookieStore, APIKeys *models.APIKeys) *ReviewController {
+	return &ReviewController{db: db, store: store, APIKeys: APIKeys}
 }
 
 func findString(resp http.ResponseWriter, req *http.Request, str string) (id int, orderType string, pagenumber int) {
@@ -247,6 +248,7 @@ func SaveReview(resp http.ResponseWriter, req *http.Request, hdl *ReviewControll
 	checklistnum := 6
 	blacklistnum := 6
 
+	// Check blakclist
 	for i := 0; i < checklistnum; i++ {
 		for k := 0; k < blacklistnum; k++ {
 			// Check threat
@@ -353,7 +355,7 @@ func (hdl *ReviewController) Get(resp http.ResponseWriter, req *http.Request) {
 	if !ok {
 		view = views.NewNotFoundView(views.DefaultBaseHTMLContext)
 	} else {
-		view = views.NewReviewShowView(views.DefaultBaseHTMLContext, review)
+		view = views.NewReviewShowView(views.DefaultBaseHTMLContext, review, hdl.APIKeys)
 	}
 	resp.Header().Set("Content-Type", view.ContentType())
 	err = view.Render(resp)
