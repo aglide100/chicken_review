@@ -7,6 +7,7 @@ import (
 
 	"github.com/aglide100/chicken_review_webserver/pkg/models"
 
+	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 )
 
@@ -70,6 +71,7 @@ SELECT
 	ID,
 	Title,
 	Date,
+	DefaultPictureURL,
 	Author
 FROM 
 	review
@@ -154,8 +156,9 @@ INSERT INTO review (
 	Date,
 	PhoneNumber,
 	Comment,
-	Score
-) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
+	Score,
+	PictureURLS
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
 
 	res, err := db.conn.Exec(q,
 		newReview.Title,
@@ -165,7 +168,8 @@ INSERT INTO review (
 		newReview.Date,
 		newReview.PhoneNumber,
 		newReview.Comment,
-		newReview.Score)
+		newReview.Score,
+		pq.Array(newReview.PictureURLs))
 	if err != nil {
 		return nil, fmt.Errorf("inserting: %v", err)
 	}
@@ -224,6 +228,7 @@ SELECT
 	Title,
 	Author,
 	DefaultPictureURL, 
+	PictureURLS,
 	StoreName, 
 	Date, 
 	PhoneNumber, 
@@ -241,6 +246,7 @@ WHERE
 		&review.Title,
 		&review.Author,
 		&review.DefaultPictureURL,
+		pq.Array(&review.PictureURLs),
 		&review.StoreName,
 		&review.Date,
 		&review.PhoneNumber,

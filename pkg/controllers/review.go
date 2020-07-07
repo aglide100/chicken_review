@@ -146,68 +146,98 @@ const (
 	maxImageSize = 20 * MiB
 )
 
-func SaveImage(resp http.ResponseWriter, req *http.Request, hdl *ReviewController) (string, bool, error) {
-	// It is just save at local, if you can change the other way to save file. you should be changed this code
+func SaveImage(resp http.ResponseWriter, req *http.Request, hdl *ReviewController) (string, []string, bool, error) {
+	// Saving image in local directory
+	var PictureURLs []string
+	PictureURLs = nil
+	var DefaultPictureURL string
 
-	if err := req.ParseMultipartForm(10 << 20); err != nil {
-		return "", true, fmt.Errorf("parsing multipart form: %v", err)
-	}
-
-	file, fileHeader, err := req.FormFile("image")
+	err := req.ParseMultipartForm(500000) // grab the multipart form
 	if err != nil {
-		return "", false, fmt.Errorf("looking up image from form file: %v", err)
-	}
-	defer file.Close()
-
-	imageBytes, err := ioutil.ReadAll(io.LimitReader(file, maxImageSize))
-	if err != nil {
-		return "", true, fmt.Errorf("can't read image data: %v", err)
+		return "", PictureURLs, false, fmt.Errorf("Can't grab file: %v", err)
 	}
 
-	fileType := http.DetectContentType(imageBytes)
-	switch fileType {
-	case "image/jpeg", "image/png", "image/gif", "image/webp":
-		fileType = strings.Replace(fileType, "image/", ".", 1)
-		// ok
-	default:
-		return "", true, fmt.Errorf("invalid image format: %q", fileType)
+	formdata := req.MultipartForm // ok, no problem so far, read the Form data
+
+	//get the *fileheaders
+	files := formdata.File["image"] // grab the filenames
+
+	log.Printf("Start reading files")
+	for i, _ := range files { // loop through the files one by one
+		file, err := files[i].Open()
+		defer file.Close()
+		if err != nil {
+			return "", PictureURLs, false, fmt.Errorf("looking up image from form file: %v", err)
+		}
+
+		imageBytes, err := ioutil.ReadAll(io.LimitReader(file, maxImageSize))
+		if err != nil {
+			return "", PictureURLs, true, fmt.Errorf("can't read image data: %v", err)
+		}
+
+		fileType := http.DetectContentType(imageBytes)
+		switch fileType {
+		case "image/jpeg", "image/png", "image/gif", "image/webp":
+			fileType = strings.Replace(fileType, "image/", ".", 1)
+			// ok
+		default:
+			return "", PictureURLs, true, fmt.Errorf("invalid image format: %q", fileType)
+		}
+
+		basePath := "ui/img/"
+
+		reviewid, err := hdl.db.GetLastInsertReviewID()
+		if err != nil {
+			log.Printf("Can't get LastInsertId!", err)
+		}
+
+		IDstr := strconv.FormatInt(reviewid, 10)
+		FileNum := strconv.Itoa(i)
+		//FileNum = filepath.Join(FileNum, "st")
+		log.Printf("reivewID: %v, IDstr: %v", reviewid, IDstr) //
+		currentReviewBasePath := filepath.Join(basePath, IDstr, "/", FileNum)
+		//currentReviewBasePath := basePath
+		log.Printf("Review image path:%v", currentReviewBasePath)
+
+		err = os.MkdirAll(currentReviewBasePath, os.ModePerm)
+		if err != nil {
+			return "", PictureURLs, true, fmt.Errorf("creatig directory for image: %v", err)
+		}
+
+		if err != nil {
+			fmt.Fprintln(resp, err)
+			return "", PictureURLs, true, fmt.Errorf("can't read image data: %v", err)
+		}
+
+		imageFilename := files[i].Filename
+		log.Printf("file name :%v", imageFilename)
+		IDstr += fileType
+		//currentReviewImagePath := filepath.Join(currentReviewBasePath, IDstr, imageFilename) // Can't create directory
+		currentReviewImagePath := filepath.Join(currentReviewBasePath, IDstr)
+
+		if err := ioutil.WriteFile(currentReviewImagePath, imageBytes, 0644); err != nil {
+			return "", PictureURLs, true, fmt.Errorf("creating image file on disk: %v", err)
+		}
+
+		str := currentReviewImagePath
+
+		log.Printf("img path: %v", currentReviewImagePath)
+		PictureURLs = append(PictureURLs, str)
+		//return currentReviewImagePath, true, nil
+		if i == 0 {
+			DefaultPictureURL = currentReviewImagePath
+		}
 	}
-	basePath := "ui/img/"
 
-	//reviewid := id
-
-	reviewid, err := hdl.db.GetLastInsertReviewID()
-	if err != nil {
-		log.Printf("Can't get LastInsertId!", err)
-	}
-
-	IDstr := strconv.FormatInt(reviewid, 10)
-	log.Printf("reivewID: %v, IDstr: %v", reviewid, IDstr) //
-	//currentReviewBasePath := filepath.Join(basePath, IDstr)
-	currentReviewBasePath := basePath
-
-	err = os.MkdirAll(currentReviewBasePath, os.ModePerm)
-	if err != nil {
-		return "", true, fmt.Errorf("creatig directory for image: %v", err)
-	}
-
-	imageFilename := fileHeader.Filename
-	log.Printf("file name :%v", imageFilename)
-	IDstr += fileType
-	//currentReviewImagePath := filepath.Join(currentReviewBasePath, IDstr, imageFilename) // Can't create directory
-	currentReviewImagePath := filepath.Join(currentReviewBasePath, IDstr)
-
-	if err := ioutil.WriteFile(currentReviewImagePath, imageBytes, 0644); err != nil {
-		return "", true, fmt.Errorf("creating image file on disk: %v", err)
-	}
-
-	log.Printf("img path: %v", currentReviewImagePath)
-	return currentReviewImagePath, true, nil
+	log.Printf("img path: %v", DefaultPictureURL)
+	return DefaultPictureURL, PictureURLs, true, nil
 }
 
 func SaveReview(resp http.ResponseWriter, req *http.Request, hdl *ReviewController, ReviewType string) (*models.Review, error, bool, string) {
 	log.Printf("[review_func]: receive request save Review")
-	path, ok, err := SaveImage(resp, req, hdl)
+	var PictureURLs []string
+
+	path, PictureURLs, ok, err := SaveImage(resp, req, hdl)
 	if !ok {
 		log.Printf("There are no image!")
 	} else if err != nil {
@@ -241,6 +271,7 @@ func SaveReview(resp http.ResponseWriter, req *http.Request, hdl *ReviewControll
 		Author:            req.PostFormValue("author"),
 		Title:             req.PostFormValue("title"),
 		DefaultPictureURL: path,
+		PictureURLs:       PictureURLs,
 		Comment:           req.PostFormValue("comment"),
 		//UpdateDate:        req.PostFormValue("write_date"),
 	}

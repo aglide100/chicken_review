@@ -1,37 +1,84 @@
+
+{{define "img_view"}}
+    {{range $pictures := .PictureURLs}}
+        <div class="swiper-slide">
+            <img src="{{$pictures}}" onerror="document.getElementById(this.id).remove()" onclick="location.href = '{{$pictures}}';"/>
+        </div>
+    {{end}}
+{{end}}
+
+
 {{define "show_view"}}
 <article class="content"]>
     <header class="header">
-        <button type="button" onclick="location.href = '/'";>Go to home</button>
         <h2>StoreName : {{.StoreName}}</h2>
         <h2>{{.Title}}</h2>
-        <img src="{{.DefaultPictureURL}}" id="DefaultPictureURL" onerror="document.getElementById(this.id).remove()" onclick="location.href = '{{.DefaultPictureURL}}';"/>
+                <!-- Slider main container -->
+        <div class="swiper-container">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+                <!-- Slides -->
+                {{template "img_view" .}}
+            </div>
+            <!-- If we need pagination -->
+            <div class="swiper-pagination"></div>
 
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+
+            <!-- If we need scrollbar -->
+            <div class="swiper-scrollbar"></div>
+        </div>
 
     <!--Insert Map api -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key={{.GoogleMapsApi}}" type="text/javascript"></script>
     <script type="text/javascript"> 
     function initialize() {
-    var myLatlng = new google.maps.LatLng(37.556911,126.918694);
+        var myLatlng = new google.maps.LatLng(37.556911,126.918694);
 
-    var myOptions = {
-        zoom: 15,
-        center: myLatlng,
-        mapTypeId: google.maps.MapTypeId.TERRAIN
-    }
-    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        var myOptions = {
+            zoom: 15,
+            center: myLatlng,
+            mapTypeId: google.maps.MapTypeId.TERRAIN
+        }
+        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-    var marker = new google.maps.Marker( {
-        position: myLatlng, 
-        map: map, 
-        title:"Seoul" 
-    });   
-    var infowindow = new google.maps.InfoWindow( {
-        content: "Seoul gangnam"
-    });
+        var marker = new google.maps.Marker( {
+            position: myLatlng, 
+            map: map, 
+            title:"Seoul" 
+        });   
+        var infowindow = new google.maps.InfoWindow( {
+            content: "Seoul gangnam"
+        });
         infowindow.open(map,marker);
     }
     window.onload=function() {
         initialize();
+        var mySwiper = new Swiper('.swiper-container', {
+        // Optional parameters
+        //direction: 'vertical',
+        loop: true,
+
+        // If we need pagination
+        pagination: {
+            el: '.swiper-pagination',
+        },
+
+        // Navigation arrows
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+
+        // And if we need scrollbar
+        /*
+        scrollbar: {
+            el: '.swiper-scrollbar',
+        },
+        */
+        })
     }
     // Maps api end
 
@@ -68,33 +115,65 @@
 </article>
 
 <style type="text/css" media="screen">
-    /*
-    .content {
-        background-color: rgba(93, 93, 93, 0.4);
-        -moz-border-radius: 7px;
-        -webkit-border-radius: 7px;
-        padding: 0.5%
-    }
-    */
+    /* for a desktop */
+    @media (min-width: 1281px) {
+        /*
+        .content {
+            background-color: rgba(93, 93, 93, 0.4);
+            -moz-border-radius: 7px;
+            -webkit-border-radius: 7px;
+            padding: 0.5%
+        }
+        */
 
-    .details {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        -ms-box-sizing: border-box;
-        box-sizing: border-box;
-        border: 3px solid rgba(0,0,0,0);   
+        .details {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -ms-box-sizing: border-box;
+            box-sizing: border-box;
+            border: 3px solid rgba(0,0,0,0);   
 
-    }
-    .header {
-       
-    }
+        }
+        .header {
+        
+        }
 
-    .header img {
-        display: block;
-        max-width:40%;
-        max-height:30%;
-        width: auto;
-        height: auto;
+        .header img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .swiper-container {
+            position:relative;
+            width: 70%;
+            height: 40%;
+        }
+    }
+    @media (max-width: 1280px) {
+        .details {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -ms-box-sizing: border-box;
+            box-sizing: border-box;
+            border: 3px solid rgba(0,0,0,0);   
+
+        }
+        .header {
+        
+        }
+
+        .header img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .swiper-container {
+            position:relative;
+            width: 100%;
+            height: 84%;
+        }
     }
 </style>
 {{end}}

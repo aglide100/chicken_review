@@ -81,9 +81,10 @@ func realMain() error {
 	rtr.AddRule("reviews", "POST", "^/reviews/search/post", reviewsCtrl.Search)
 
 	rtr.AddRule("reviews", "GET", "^/img", reviewsCtrl.GetImage)
-
 	//rtr.AddRule("reviews", "GET", "^/reviews/ui/img/([0-9]+)/[a-z0-9A-Z_+.-.\\s.-]+.(?i)(img|jpg|jpeg|png|gif)$", reviewsCtrl.GetImage)
-	rtr.AddRule("reviews", "GET", "^/reviews/ui/img/[a-z0-9A-Z_+.-.\\s.-]+.(?i)(img|jpg|jpeg|png|gif)$", reviewsCtrl.GetImage)
+
+	// URI ex) reviews/ui/img/1/0/1.jpeg
+	rtr.AddRule("reviews", "GET", "^/reviews/ui/img/([0-9]+)/[a-z0-9_+.-]/[a-z0-9A-Z_+.-.\\s.-]+.(?i)(img|jpg|jpeg|png|gif)$", reviewsCtrl.GetImage)
 
 	// listenPort => 철자 오류로 뒤에서 고치기!!! listenPort -> extra string err
 	ln, err := net.Listen("tcp", ":80")
