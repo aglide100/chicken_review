@@ -298,3 +298,11 @@ func (db *Database) RegisterNewUser(NewUser *models.User) error {
 
 	return nil
 }
+
+func (db *Database) RegisterNewGoauthUser(NewUser *models.ProviderUser) error {
+	const q = `
+	
+	`
+
+	return nil
+}

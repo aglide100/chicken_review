@@ -14,6 +14,9 @@ import (
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/providers/naver"
+
 	"github.com/aglide100/chicken_review_webserver/pkg/db"
 )
 
@@ -28,17 +31,28 @@ var store = sessions.NewCookieStore(securecookie.GenerateRandomKey(32))
 func realMain() error {
 	log.Printf("start realMain")
 
-	//listenAddr := os.Getenv("LISTEN_ADDR")
-	//listenPort := os.Getenv("LISTEN_PORT")
+	listenAddr := os.Getenv("LISTEN_ADDR")
+	listenPort := os.Getenv("LISTEN_PORT")
 	dbAddr := os.Getenv("DB_ADDR")
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 	GoogleMaps := os.Getenv("GOOGLE_MAPS_API_KEYS")
+	callbackAddr := os.Getenv("CALLBACK_ADDR")
 
+	log.Printf("ListenAddr : %v %v, DBAddr : %v %v, DBUser : %v, DBPWD : %v", listenAddr, listenPort, dbAddr, dbPort, dbUser, dbPassword)
+	/* Using goth */
+	goth.UseProviders(
+		naver.New(os.Getenv("NAVER_KEY"), os.Getenv("NAVER_SECRET"), callbackAddr+"/auth/naver/callback"),
+	)
 	// Api keys(GoogleMaps)
-	APIKeys := &models.APIKeys{GoogleMaps: GoogleMaps}
+	APIKeys := &models.APIKeys{
+		GoogleMaps:  GoogleMaps,
+		Naver:       os.Getenv("NAVER_KEY"),
+		NaverSecret: os.Getenv("NAVER_SECRET"),
+	}
+
 	//addr := net.JoinHostPort(listenAddr, listenPort)
 
 	dbport, _ := strconv.Atoi(dbPort)
@@ -64,6 +78,8 @@ func realMain() error {
 	rtr.AddRule("login", "GET", "/login", loginCtrl.LoginCheck)
 	rtr.AddRule("login", "POST", "/login/log_In", loginCtrl.LogIn)
 	rtr.AddRule("login", "GET", "/login/log_Out", loginCtrl.LogOut)
+
+	rtr.AddRule("login", "GET", "/auth/[A-Za-z]", loginCtrl.Register_goauth)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/?$", reviewsCtrl.List)
 	rtr.AddRule("reviews", "GET", "^reviews/([A-Z]{1,3	})-pagenumber=([0-9]+)$", reviewsCtrl.List)

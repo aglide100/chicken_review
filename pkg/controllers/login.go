@@ -9,15 +9,12 @@ import (
 	"github.com/aglide100/chicken_review_webserver/pkg/models"
 	"github.com/aglide100/chicken_review_webserver/pkg/views"
 	"github.com/gorilla/sessions"
+	"github.com/markbates/goth/gothic"
 )
 
 type LoginController struct {
 	db    *db.Database
 	store *sessions.CookieStore
-}
-
-type User struct {
-	name string
 }
 
 func NewLoginController(db *db.Database, store *sessions.CookieStore) *LoginController {
@@ -61,28 +58,6 @@ func (hdl *LoginController) Register(resp http.ResponseWriter, req *http.Request
 
 }
 
-func (hdl *LoginController) LogIn(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("[login_func]: receive request to login view")
-
-	// 로그인 채크 로직 ++
-	UserID := req.PostFormValue("UserID")
-	UserPWD := req.PostFormValue("UserPWD")
-
-	gob.Register(&User{})
-
-	session, _ := hdl.store.Get(req, "session-name")
-	session.Values["user"] = &User{UserID}
-	session.Save(req, resp)
-	log.Printf("save session, id: %v pwd: %v", UserID, UserPWD)
-
-	view := views.NewReviewLoginView(views.DefaultBaseHTMLContext)
-	resp.Header().Set("Content-Type", view.ContentType())
-	err := view.Render(resp)
-	if err != nil {
-		log.Printf("faild to render : %v", err)
-	}
-}
-
 func (hdl *LoginController) LoginCheck(resp http.ResponseWriter, req *http.Request) {
 	log.Printf("[login_func]: receive request to LoginCheck")
 	session, _ := hdl.store.Get(req, "session-name")
@@ -101,7 +76,67 @@ func (hdl *LoginController) LoginCheck(resp http.ResponseWriter, req *http.Reque
 
 }
 
+/* Check Local User */
+func (hdl *LoginController) LogIn(resp http.ResponseWriter, req *http.Request) {
+	log.Printf("[login_func]: receive request to login view")
+
+	// 로그인 채크 로직 ++
+	UserID := req.PostFormValue("UserID")
+	UserPWD := req.PostFormValue("UserPWD")
+
+	gob.Register(&models.User{})
+
+	session, _ := hdl.store.Get(req, "session-name")
+	session.Values["user"] = &models.User{UserID}
+	session.Save(req, resp)
+	log.Printf("save session, id: %v pwd: %v", UserID, UserPWD)
+
+	// Goauth 와 로컬 유저 체크 하는 로직 넣기
+
+	view := views.NewReviewLoginView(views.DefaultBaseHTMLContext)
+	resp.Header().Set("Content-Type", view.ContentType())
+	err := view.Render(resp)
+	if err != nil {
+		log.Printf("faild to render : %v", err)
+	}
+}
+
 func (hdl *LoginController) LogOut(resp http.ResponseWriter, req *http.Request) {
 	log.Printf("[login_func]: receive request to LogOut")
 
+	// 세션 지우기
+}
+
+/* Check Provider(Goauth) User */
+func (hdl *LoginController) Register_goauth(resp http.ResponseWriter, req *http.Request) {
+	log.Printf("[login_func]: receive request to goauth")
+
+	usr, err := gothic.CompleteUserAuth(resp, req)
+	if err != nil {
+		log.Printf("Can't find Goauth User: %v", err)
+	}
+
+	user := &models.ProviderUser{
+		RawData:           usr.RawData,
+		Provider:          usr.Provider,
+		Email:             usr.Email,
+		Name:              usr.Name,
+		FirstName:         usr.FirstName,
+		LastEName:         usr.LastName,
+		NickName:          usr.NickName,
+		Description:       usr.Description,
+		UserID:            usr.UserID,
+		AvatarURL:         usr.AvatarURL,
+		Location:          usr.Location,
+		AccessToken:       usr.AccessToken,
+		AccessTokenSecret: usr.AccessTokenSecret,
+		RefreshToken:      usr.RefreshToken,
+		ExpiresAt:         usr.ExpiresAt,
+		IDToken:           usr.IDToken,
+	}
+
+	err = hdl.db.RegisterNewGoauthUser(user)
+	if err != nil {
+		log.Printf("Can't register Goauth User: %v", err)
+	}
 }

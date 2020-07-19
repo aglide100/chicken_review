@@ -12,4 +12,5 @@ type DB interface {
 	ListReviews(orderType string, pageNumber int) ([]*models.Review, error)
 	GetLastInsertReviewID() (int64, error)
 	RegisterNewUser(NewUser *models.User) error
+	RegisterNewGoauthUser(NewUser *models.ProviderUser) error
 }
