@@ -3,11 +3,13 @@
     <form name="loginForm" action="/login/log_In" method="post">
         <input type="text" name="UserID" placeholder="ID">
         <input type="text" name="UserPWD" placeholder="PASSWORD">
-        <input type="submit" value="Sign In" onclick=Submit()>
     </form>
+    <input type="submit" value="Sign In" onclick=Submit()>
     <button onclick=GoToRegPage()>Sign Up</button>
-    <p><a href="/auth?provider=naver">Log in with Naver</a></p>
-    <p><a href="/auth?provider=google">Log in with Google</a></p>
+    <p>
+        <a href="/auth?provider=naver">Log in with Naver</a>
+        <a href="/auth?provider=google">Log in with Google</a>
+    </p>
 </article>
 <script>
     function Submit() {
@@ -28,6 +30,11 @@
         border-collapse: collapse;
         text-align: center;
         padding:8px;
+    }
+    
+    .loginForm input {
+        text-align:center;
+        display:block;
     }
 </style>
 
