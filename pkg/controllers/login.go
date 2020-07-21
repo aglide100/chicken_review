@@ -135,13 +135,13 @@ func (hdl *LoginController) LogOut(resp http.ResponseWriter, req *http.Request) 
 }
 
 /* Check Provider(Goauth) User */
-func (hdl *LoginController) RegisterGoth(resp http.ResponseWriter, req *http.Request) {
+func (hdl *LoginController) AuthGoth(resp http.ResponseWriter, req *http.Request) {
 	log.Printf("[login_func]: receive request to goauth")
 
 	usr, err := gothic.CompleteUserAuth(resp, req)
 	if err == nil {
-
 		// parse user data
+
 		user := &models.ProviderUser{
 			RawData:           usr.RawData,
 			Provider:          usr.Provider,
@@ -164,12 +164,18 @@ func (hdl *LoginController) RegisterGoth(resp http.ResponseWriter, req *http.Req
 		err = hdl.db.RegisterNewGoauthUser(user)
 		if err != nil {
 			log.Printf("Can't register Goauth User: %v", err)
+
+			resp.Header().Set("Location", "/")
+			resp.WriteHeader(http.StatusTemporaryRedirect)
 		}
 
 	} else {
 		gothic.BeginAuthHandler(resp, req)
 
 		log.Printf("Can't find Goauth User: %v", err)
+
+		resp.Header().Set("Location", "/")
+		resp.WriteHeader(http.StatusTemporaryRedirect)
 	}
 }
 
@@ -180,12 +186,14 @@ func (hdl *LoginController) GothLogIn(resp http.ResponseWriter, req *http.Reques
 */
 
 func (hdl *LoginController) GothLogOut(resp http.ResponseWriter, req *http.Request) {
+	log.Printf("[login_func]: receive request to logout gothUser")
 	gothic.Logout(resp, req)
 	resp.Header().Set("Location", "/")
 	resp.WriteHeader(http.StatusTemporaryRedirect)
 }
 
 func (hdl *LoginController) GothCallBack(resp http.ResponseWriter, req *http.Request) {
+	log.Printf("[login_func]: receive request to callback goth")
 
 	user, err := gothic.CompleteUserAuth(resp, req)
 	if err != nil {

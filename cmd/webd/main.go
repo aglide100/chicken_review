@@ -49,11 +49,9 @@ func realMain() error {
 		naver.New(os.Getenv("NAVER_KEY"), os.Getenv("NAVER_SECRET"), callbackAddr+"/auth/callback"),
 		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), callbackAddr+"/auth/callback"),
 	)
-	// Api keys(GoogleMaps)
+	// add Api keys(GoogleMaps)
 	APIKeys := &models.APIKeys{
 		GoogleMaps: GoogleMaps,
-		//Naver:       os.Getenv("NAVER_KEY"),
-		//NaverSecret: os.Getenv("NAVER_SECRET"),
 	}
 
 	//addr := net.JoinHostPort(listenAddr, listenPort)
@@ -82,9 +80,8 @@ func realMain() error {
 	rtr.AddRule("login", "POST", "^/login/log_In", loginCtrl.LogIn)
 	rtr.AddRule("login", "GET", "^/login/log_Out", loginCtrl.LogOut)
 
-	rtr.AddRule("login", "GET", "^/auth", loginCtrl.RegisterGoth)
+	rtr.AddRule("login", "GET", "^/auth", loginCtrl.AuthGoth)
 	rtr.AddRule("login", "GET", "^/auth/logout/[A-Za-z]", loginCtrl.GothLogOut)
-	//rtr.AddRule("login", "GET", "^/auth/login/[A-Za-z]", loginCtrl.GothLogOut)
 	rtr.AddRule("login", "GET", "^/auth/callback", loginCtrl.GothCallBack)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/?$", reviewsCtrl.List)
