@@ -2,23 +2,48 @@ package controllers
 
 import (
 	"encoding/gob"
+	"fmt"
 	"log"
 	"net/http"
+	"regexp"
+	"strings"
 
 	"github.com/aglide100/chicken_review_webserver/pkg/db"
 	"github.com/aglide100/chicken_review_webserver/pkg/models"
 	"github.com/aglide100/chicken_review_webserver/pkg/views"
 	"github.com/gorilla/sessions"
+	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 )
 
 type LoginController struct {
-	db    *db.Database
-	store *sessions.CookieStore
+	db        *db.Database
+	store     *sessions.CookieStore
+	Providers *goth.Providers
 }
 
 func NewLoginController(db *db.Database, store *sessions.CookieStore) *LoginController {
+
 	return &LoginController{db: db, store: store}
+}
+
+func findProvider(resp http.ResponseWriter, req *http.Request) string {
+	var matches []string
+
+	var authProviderPattern = regexp.MustCompile("^/auth/[A-Za-z]")
+
+	matches = authProviderPattern.FindStringSubmatch(req.URL.Path)
+
+	result := strings.Join(matches, "")
+
+	switch result {
+	case "naver":
+		return result
+	case "github":
+		return result
+	default:
+		return "No match providers"
+	}
 }
 
 func (hdl *LoginController) Register_Page(resp http.ResponseWriter, req *http.Request) {
@@ -87,7 +112,9 @@ func (hdl *LoginController) LogIn(resp http.ResponseWriter, req *http.Request) {
 	gob.Register(&models.User{})
 
 	session, _ := hdl.store.Get(req, "session-name")
-	session.Values["user"] = &models.User{UserID}
+	session.Values["user"] = &models.User{
+		UserID:  UserID,
+		UserPWD: UserPWD}
 	session.Save(req, resp)
 	log.Printf("save session, id: %v pwd: %v", UserID, UserPWD)
 
@@ -108,35 +135,62 @@ func (hdl *LoginController) LogOut(resp http.ResponseWriter, req *http.Request) 
 }
 
 /* Check Provider(Goauth) User */
-func (hdl *LoginController) Register_goauth(resp http.ResponseWriter, req *http.Request) {
+func (hdl *LoginController) RegisterGoth(resp http.ResponseWriter, req *http.Request) {
 	log.Printf("[login_func]: receive request to goauth")
 
 	usr, err := gothic.CompleteUserAuth(resp, req)
-	if err != nil {
+	if err == nil {
+
+		// parse user data
+		user := &models.ProviderUser{
+			RawData:           usr.RawData,
+			Provider:          usr.Provider,
+			Email:             usr.Email,
+			Name:              usr.Name,
+			FirstName:         usr.FirstName,
+			LastEName:         usr.LastName,
+			NickName:          usr.NickName,
+			Description:       usr.Description,
+			UserID:            usr.UserID,
+			AvatarURL:         usr.AvatarURL,
+			Location:          usr.Location,
+			AccessToken:       usr.AccessToken,
+			AccessTokenSecret: usr.AccessTokenSecret,
+			RefreshToken:      usr.RefreshToken,
+			ExpiresAt:         usr.ExpiresAt,
+			IDToken:           usr.IDToken,
+		}
+
+		err = hdl.db.RegisterNewGoauthUser(user)
+		if err != nil {
+			log.Printf("Can't register Goauth User: %v", err)
+		}
+
+	} else {
+		gothic.BeginAuthHandler(resp, req)
+
 		log.Printf("Can't find Goauth User: %v", err)
 	}
+}
 
-	user := &models.ProviderUser{
-		RawData:           usr.RawData,
-		Provider:          usr.Provider,
-		Email:             usr.Email,
-		Name:              usr.Name,
-		FirstName:         usr.FirstName,
-		LastEName:         usr.LastName,
-		NickName:          usr.NickName,
-		Description:       usr.Description,
-		UserID:            usr.UserID,
-		AvatarURL:         usr.AvatarURL,
-		Location:          usr.Location,
-		AccessToken:       usr.AccessToken,
-		AccessTokenSecret: usr.AccessTokenSecret,
-		RefreshToken:      usr.RefreshToken,
-		ExpiresAt:         usr.ExpiresAt,
-		IDToken:           usr.IDToken,
-	}
+/*
+func (hdl *LoginController) GothLogIn(resp http.ResponseWriter, req *http.Request) {
 
-	err = hdl.db.RegisterNewGoauthUser(user)
+}
+*/
+
+func (hdl *LoginController) GothLogOut(resp http.ResponseWriter, req *http.Request) {
+	gothic.Logout(resp, req)
+	resp.Header().Set("Location", "/")
+	resp.WriteHeader(http.StatusTemporaryRedirect)
+}
+
+func (hdl *LoginController) GothCallBack(resp http.ResponseWriter, req *http.Request) {
+
+	user, err := gothic.CompleteUserAuth(resp, req)
 	if err != nil {
-		log.Printf("Can't register Goauth User: %v", err)
+		fmt.Fprintln(resp, err)
 	}
+
+	log.Printf("User :%v", user)
 }

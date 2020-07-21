@@ -13,9 +13,10 @@ import (
 	"github.com/aglide100/chicken_review_webserver/pkg/router"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
-
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/naver"
+
+	"github.com/markbates/goth/providers/google"
 
 	"github.com/aglide100/chicken_review_webserver/pkg/db"
 )
@@ -38,19 +39,21 @@ func realMain() error {
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
-	GoogleMaps := os.Getenv("GOOGLE_MAPS_API_KEYS")
-	callbackAddr := os.Getenv("CALLBACK_ADDR")
+	GoogleMaps := os.Getenv("GOOGLE_MAPS_API_KEY")
 
-	log.Printf("ListenAddr : %v %v, DBAddr : %v %v, DBUser : %v, DBPWD : %v", listenAddr, listenPort, dbAddr, dbPort, dbUser, dbPassword)
+	log.Printf("ListenAddr : %v:%v, DBAddr : %v:%v, DBUser : %v, DBPWD : %v", listenAddr, listenPort, dbAddr, dbPort, dbUser, dbPassword)
+
 	/* Using goth */
+	callbackAddr := os.Getenv("CALLBACK_ADDR")
 	goth.UseProviders(
-		naver.New(os.Getenv("NAVER_KEY"), os.Getenv("NAVER_SECRET"), callbackAddr+"/auth/naver/callback"),
+		naver.New(os.Getenv("NAVER_KEY"), os.Getenv("NAVER_SECRET"), callbackAddr+"/auth/callback"),
+		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), callbackAddr+"/auth/callback"),
 	)
 	// Api keys(GoogleMaps)
 	APIKeys := &models.APIKeys{
-		GoogleMaps:  GoogleMaps,
-		Naver:       os.Getenv("NAVER_KEY"),
-		NaverSecret: os.Getenv("NAVER_SECRET"),
+		GoogleMaps: GoogleMaps,
+		//Naver:       os.Getenv("NAVER_KEY"),
+		//NaverSecret: os.Getenv("NAVER_SECRET"),
 	}
 
 	//addr := net.JoinHostPort(listenAddr, listenPort)
@@ -72,14 +75,17 @@ func realMain() error {
 
 	rtr.AddRule("default", "GET", "^/$", defaultCtrl.ServeHTTP)
 
-	rtr.AddRule("login", "GET", "/login/register_page", loginCtrl.Register_Page)
-	rtr.AddRule("login", "POST", "/login/sign_up", loginCtrl.Register)
+	rtr.AddRule("login", "GET", "^/login/register_page", loginCtrl.Register_Page)
+	rtr.AddRule("login", "POST", "^/login/sign_up", loginCtrl.Register)
 
-	rtr.AddRule("login", "GET", "/login", loginCtrl.LoginCheck)
-	rtr.AddRule("login", "POST", "/login/log_In", loginCtrl.LogIn)
-	rtr.AddRule("login", "GET", "/login/log_Out", loginCtrl.LogOut)
+	rtr.AddRule("login", "GET", "^/login", loginCtrl.LoginCheck)
+	rtr.AddRule("login", "POST", "^/login/log_In", loginCtrl.LogIn)
+	rtr.AddRule("login", "GET", "^/login/log_Out", loginCtrl.LogOut)
 
-	rtr.AddRule("login", "GET", "/auth/[A-Za-z]", loginCtrl.Register_goauth)
+	rtr.AddRule("login", "GET", "^/auth", loginCtrl.RegisterGoth)
+	rtr.AddRule("login", "GET", "^/auth/logout/[A-Za-z]", loginCtrl.GothLogOut)
+	//rtr.AddRule("login", "GET", "^/auth/login/[A-Za-z]", loginCtrl.GothLogOut)
+	rtr.AddRule("login", "GET", "^/auth/callback", loginCtrl.GothCallBack)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/?$", reviewsCtrl.List)
 	rtr.AddRule("reviews", "GET", "^reviews/([A-Z]{1,3	})-pagenumber=([0-9]+)$", reviewsCtrl.List)
@@ -107,7 +113,7 @@ func realMain() error {
 	if err != nil {
 		return fmt.Errorf("creating network listener: %v", err)
 	}
-	//defer ln.Close()
+	defer ln.Close()
 
 	srv := http.Server{Handler: rtr}
 	log.Printf("listening on address %q", ln.Addr().String())
