@@ -200,5 +200,6 @@ func (hdl *LoginController) GothCallBack(resp http.ResponseWriter, req *http.Req
 		fmt.Fprintln(resp, err)
 	}
 
+	resp.Header().Set("Location", "/")
 	log.Printf("User :%v", user)
 }

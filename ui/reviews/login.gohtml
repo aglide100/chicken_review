@@ -3,15 +3,19 @@
     <form name="loginForm" action="/login/log_In" method="post">
         <input type="text" name="UserID" placeholder="ID">
         <input type="text" name="UserPWD" placeholder="PASSWORD">
-        <input type="submit" value="Sign In" onclick=Submit()>
-        <button onclick=GoToRegPage()>Sign Up</button>
+        
+        <div class="login_btn">
+            <input type="submit" value="Sign In" onclick=Submit()>
+            <button onclick=GoToRegPage()>Sign Up</button>
+        </div>
     </form>
     
     <image>
 
-    <p>
-        <a href="/auth?provider=naver"><img src="/ui/log/naver/Log in with NAVER_Official_Green.PNG"/></a>
-        <a href="/auth?provider=google"><img src="/ui/log/google/btn_google_signin_dark_pressed_web.png"/></a>
+    
+    <p>Log in to Social account
+        <a href="/auth?provider=naver"><img src="reviews/ui/log/naver/Log in with NAVER_Official_Green.PNG"/></a>
+        <a href="/auth?provider=google"><img src="reviews//ui/log/google/btn_google_signin_dark_pressed_web.png"/></a>
     </p>
 </article>
 <script>
@@ -27,16 +31,23 @@
 </script>
 <style type="text/css" media="screen">
     .loginForm{
+        display:flex;
+        justify-content: center;
         border:1px solid gray;
         background-color: #999;
         border-width: 1px 0;
         border-collapse: collapse;
-        text-align: center;
+        border-radius: 5px;
         padding:8px;
     }
     
     .loginForm input {
         display:inline-block;
+    }
+
+    .login_btn {
+        display:flex;
+        justify-content: center;
     }
 </style>
 
