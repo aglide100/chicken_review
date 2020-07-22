@@ -80,9 +80,9 @@ func realMain() error {
 	rtr.AddRule("login", "POST", "^/login/log_In", loginCtrl.LogIn)
 	rtr.AddRule("login", "GET", "^/login/log_Out", loginCtrl.LogOut)
 
-	rtr.AddRule("login", "GET", "^/auth", loginCtrl.AuthGoth)
-	rtr.AddRule("login", "GET", "^/auth/logout/[A-Za-z]", loginCtrl.GothLogOut)
-	rtr.AddRule("login", "GET", "^/auth/callback.*", loginCtrl.GothCallBack)
+	rtr.AddRule("login", "GET", "^/auth?provider=([A-Za-z])", loginCtrl.AuthGoth)
+	rtr.AddRule("login", "GET", "^logout/auth?provider=([A-Za-z])", loginCtrl.GothLogOut)
+	rtr.AddRule("login", "GET", "^/auth/{provider}/callback", loginCtrl.GothCallBack)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/?$", reviewsCtrl.List)
 	rtr.AddRule("reviews", "GET", "^reviews/([A-Z]{1,3	})-pagenumber=([0-9]+)$", reviewsCtrl.List)
