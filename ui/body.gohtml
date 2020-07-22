@@ -1,15 +1,17 @@
 {{define "body"}}
 
 <body>
-    <!-- Logo article -->
+    <!-- Logo article start -->
     <div class="headlight">
             <h2 onclick="location.href = '/'";>Chicken review</h2>
             <h5>We eat, and review Chickens</h5>
     </div>
+    <!-- Logo article end -->
 
 
-    <!-- Navigation article -->
-    
+    <!-- Navigation article start -->
+
+    <!-- nav for dekstop or bigger start -->
     <div class="nav">
         <nav class="desc">
             <li>
@@ -19,7 +21,9 @@
             </li>
         </nav>
     </div>
+    <!-- nav for dekstop or bigger end -->
 
+    <!-- nav for mobile start -->
     <div class="mobile_nav">
         <details class="folding_menu">
            <summary>Menu</summary>
@@ -32,9 +36,12 @@
         </nav>
         </details>
     </div>
+    <!-- nav for mobile end -->
+
+    <!-- Navigation article end -->
 
 
-    <!-- Content article -->
+    <!-- Content article start -->
     <article class="content">
         {{block "content" .Content}}
     {{/* This is shown if nothing overrides the "content" block. */}}
@@ -42,6 +49,14 @@
     <p>There is no content to display. You shouldn't see this page!</p>
     {{end}}
     </article>
+    <!-- Content article end -->
+
+    <!-- Footer article start -->
+    <article class="footer">
+        <hr size="0.5px"></hr>
+        <p>Copyright 2020. ~~~~~ All picture cannot be copied without permission.</p>
+    </article>
+    <!-- Footer article end -->
 </body>
 
 {{end}}

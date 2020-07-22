@@ -174,8 +174,8 @@ func (hdl *LoginController) AuthGoth(resp http.ResponseWriter, req *http.Request
 
 		log.Printf("Can't find Goauth User: %v", err)
 
-		resp.Header().Set("Location", "/")
-		resp.WriteHeader(http.StatusTemporaryRedirect)
+		//resp.Header().Set("Location", "/")
+		//resp.WriteHeader(http.StatusTemporaryRedirect)
 	}
 }
 
