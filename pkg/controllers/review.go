@@ -80,6 +80,17 @@ func findString(resp http.ResponseWriter, req *http.Request, str string) (id int
 
 	return id, "", Pnumber
 }
+func (hdl *ReviewController) GetScript(resp http.ResponseWriter, req *http.Request) {
+	log.Printf("[review_func]: receive request to get script")
+
+	view := views.NewReviewGetScriptView(views.DefaultBaseHTMLContext, req.URL.Path)
+	resp.Header().Set("Content-Type", view.ContentType())
+	err := view.Render(resp)
+	if err != nil {
+		log.Printf("failed to render: %v", err)
+	}
+
+}
 
 func (hdl *ReviewController) GetImage(resp http.ResponseWriter, req *http.Request) {
 	log.Printf("[review_func]: receive request to get image")

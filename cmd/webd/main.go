@@ -80,9 +80,9 @@ func realMain() error {
 	rtr.AddRule("login", "POST", "^/login/log_In", loginCtrl.LogIn)
 	rtr.AddRule("login", "GET", "^/login/log_Out", loginCtrl.LogOut)
 
-	rtr.AddRule("login", "GET", "^/auth?provider=([A-Za-z])", loginCtrl.AuthGoth)
-	rtr.AddRule("login", "GET", "^logout/auth?provider=([A-Za-z])", loginCtrl.GothLogOut)
-	rtr.AddRule("login", "GET", "^/auth/{provider}/callback", loginCtrl.GothCallBack)
+	rtr.AddRule("login", "GET", "^/auth", loginCtrl.AuthGoth)
+	rtr.AddRule("login", "GET", "^/auth/logout/([A-Za-z])", loginCtrl.GothLogOut)
+	rtr.AddRule("login", "GET", "^/auth/callback?", loginCtrl.GothCallBack)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/?$", reviewsCtrl.List)
 	rtr.AddRule("reviews", "GET", "^reviews/([A-Z]{1,3	})-pagenumber=([0-9]+)$", reviewsCtrl.List)
@@ -105,6 +105,9 @@ func realMain() error {
 	// URI ex) reviews/ui/img/1/0/1.jpeg
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/img/([0-9]+)/[a-z0-9_+.-]/[a-z0-9A-Z_+.-.\\s.-]+.(?i)(img|jpg|jpeg|png|gif)$", reviewsCtrl.GetImage)
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/log/.*", reviewsCtrl.GetImage)
+
+	rtr.AddRule("reviews", "GET", "^/reviews/ui/css/.*", reviewsCtrl.GetScript)
+	rtr.AddRule("reviews", "GET", "^/reviews/ui/js/.*", reviewsCtrl.GetScript)
 
 	// listenPort => 철자 오류로 뒤에서 고치기!!! listenPort -> extra string err
 	ln, err := net.Listen("tcp", ":80")

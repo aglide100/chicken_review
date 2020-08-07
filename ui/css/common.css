@@ -1,0 +1,107 @@
+/* Get font from google*/
+@import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+    /* for a desktop */
+@media (min-width: 1281px) {
+    .content {
+       font-family:Nanum Gothic;
+        font-size: medium;
+        margin-left: 5%;
+        margin-right: 5%;
+        width:90%;
+        float:left;
+    }
+    .headlight {
+        visibility:visible;
+    }
+    .mobile_nav {
+        visibility: hidden;
+    }
+    .nav {
+        visibility:visible;
+        margin-right:7%;
+        padding:2%;
+        display:inline;
+        float:right;
+    }
+    .desc li {
+        list-style-type: none;
+        font-family:Nanum Gothic;
+        font-size: large;
+        /*background-color: #f1f1f1;*/
+    }
+    .desc li a {
+        position:relative;
+        width:3%;
+        color: #000;
+        text-decoration: none;
+    }
+    .desc li a:after {
+        content:'';
+        position: absolute;
+        width: 100%; height:100%;
+        top:0; left:0;
+        background:rgba(0,0,0,0.6);
+        opacity: 0;
+        transition: all 1s;
+        -webkit-transition: all 1s;
+    }
+    .desc li a:hover:after {
+        opacity:1;
+    }
+    .footer {
+        position: fixed;
+        bottom: 0; 
+        width: 100%;
+    }
+}
+
+@media (max-width: 1280px) {
+    .content {
+        font-family:Nanum Gothic;
+        font-size: medium;
+        width:100%;
+        height:auto;
+    }
+    .headlight {
+        text-align: center;
+    }
+    .nav {
+        visibility: hidden;
+    }
+    .mobile_nav {
+        visibility: visible;
+        padding:2%;
+        display:inline;
+        float:center;
+    }
+    .mobile_desc li {
+        list-style-type: none;
+        font-family:Nanum Gothic;
+        font-size: large;
+        /*background-color: #f1f1f1;*/
+    }
+    .mobile_desc li a {
+        position:relative;
+        width:3%;
+        color: #000;
+        text-decoration: none;
+    }
+    .mobile_desc li a:after {
+        content:'';
+        position: absolute;
+        width: 100%; height:100%;
+        top:0; left:0;
+        background:rgba(0,0,0,0.6);
+        opacity: 0;
+        transition: all 1s;
+        -webkit-transition: all 1s;
+    }
+    .mobile_desc li a:hover:after {
+        opacity:1;
+    }
+    .footer {
+        position: fixed;
+        bottom: 0; 
+        width: 100%;
+    }
+}
