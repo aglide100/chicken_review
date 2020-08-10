@@ -85,7 +85,7 @@ func realMain() error {
 	rtr.AddRule("login", "GET", "^/auth/callback?", loginCtrl.GothCallBack)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/?$", reviewsCtrl.List)
-	rtr.AddRule("reviews", "GET", "^reviews/([A-Z]{1,3	})-pagenumber=([0-9]+)$", reviewsCtrl.List)
+	rtr.AddRule("reviews", "GET", "^reviews/([A-Z]{1,3})-pagenumber=([0-9]+)$", reviewsCtrl.List)
 	rtr.AddRule("reviews", "GET", "^/reviews/([0-9]+)$", reviewsCtrl.Get)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/create$", reviewsCtrl.Create)
@@ -104,7 +104,7 @@ func realMain() error {
 
 	// URI ex) reviews/ui/img/1/0/1.jpeg
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/img/([0-9]+)/[a-z0-9_+.-]/[a-z0-9A-Z_+.-.\\s.-]+.(?i)(img|jpg|jpeg|png|gif)$", reviewsCtrl.GetImage)
-	rtr.AddRule("reviews", "GET", "^/reviews/ui/log/.*", reviewsCtrl.GetImage)
+	rtr.AddRule("reviews", "GET", "^/reviews/ui/logo/.*", reviewsCtrl.GetImage)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/css/.*", reviewsCtrl.GetScript)
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/js/.*", reviewsCtrl.GetScript)

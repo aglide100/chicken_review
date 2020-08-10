@@ -10,55 +10,18 @@
         </div>
     </form>
     
-    <image>
-
     
     <div class="loginToProvider">
-        <a href="/auth?provider=naver"><img src="reviews/ui/log/naver/Log in with NAVER_Official_Green.PNG"/></a>
-        <a href="/auth?provider=google"><img src="reviews/ui/log/google/btn_google_signin_dark_pressed_web.png"/></a>
+
+        <a href="/auth?provider=naver"><img src="reviews/ui/logo/naver/Log in with NAVER_Official_Green.PNG"/></a>
+        <a href="/auth?provider=google"><img src="reviews/ui/logo/google/btn_google_signin_dark_pressed_web.png"/></a>
     </div>
 </article>
-<script>
-    function Submit() {
-        document.loginForm.submit();
-    }
-
-    function GoToRegPage() {
-        location.href = '/login/register_page';
-    }
-
-    // add multi provider auth 
-</script>
-<style type="text/css" media="screen">
-    .loginForm{
-        display:flex;
-        justify-content: center;
-        border:1px solid gray;
-        background-color: #999;
-        border-width: 1px 0;
-        border-collapse: collapse;
-        border-radius: 5px;
-        padding:8px;
-    }
-    
-    .loginForm input {
-        display:inline-block;
-    }
-
-    .login_btn {
-        display:flex;
-        justify-content: center;
-    }
-    
-    .loginToProvider {
-        display:block;
-        width:auto;
-        height:30%;
-    }
-</style>
 
 {{end}}
 
 {{define "content"}}
+<script src="/reviews/ui/js/login.js"></script>
+<link rel="stylesheet" href="/reviews/ui/css/login.css">
 {{template "login_view" .}}
 {{end}} 

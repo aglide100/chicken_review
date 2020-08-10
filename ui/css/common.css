@@ -1,5 +1,14 @@
 /* Get font from google*/
 @import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+
+
+:root {
+    --small-fontsize: 3vw;
+
+    /* footer mobile */
+    --mobile-footer-fontsize: 20px;
+    --mobile-footer-fontcolor: #7d7d7d;
+}
     /* for a desktop */
 @media (min-width: 1281px) {
     .content {
@@ -50,8 +59,14 @@
     }
     .footer {
         position: fixed;
-        bottom: 0; 
-        width: 100%;
+        bottom: 0;
+        background-color: lightgray;
+        margin-left: -1vw;
+        width: 105vw;
+        border-radius: 10px;
+    }
+    .footer p {
+
     }
 }
 
@@ -101,7 +116,20 @@
     }
     .footer {
         position: fixed;
-        bottom: 0; 
-        width: 100%;
+        bottom: 0;
+        height: 14vw;
+        background-color: lightgray;
+        margin-left: -1vw;
+        width: 105vw;
+        border-radius: 10px;
+    }
+    .footer hr {
+        display: none;
+    }
+
+    .footer p {
+        font-size: var(--mobile-footer-fontsize);
+        color: var(--mobile-footer-fontcolor);
+        margin-left: 3vw;
     }
 }
