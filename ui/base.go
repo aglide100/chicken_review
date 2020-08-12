@@ -12,6 +12,7 @@ type Head struct {
 	Description string
 	OG          *OGData
 	Twitter     *Twitter
+	ContentHead interface{}
 }
 
 type Body struct {

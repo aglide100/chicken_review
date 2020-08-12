@@ -33,12 +33,9 @@
 </div>
 
 
-
-<article class="image_list">
-    {{template "list_view_Picture" .}}
-</article>   
-
-
+<div class="Search-button">Search Button
+    <img src="/reviews/ui/">
+</div>
 <form action="/reviews/search/post" method="post" class="searchForm" id="search">
     <input type="text" name="name" >
     <select name="subject">
@@ -53,5 +50,14 @@
     </select>
     <input type="submit" value="Search" onclick=Search()>
 </form>
+
+
+
+<article class="image_list">
+    {{template "list_view_Picture" .}}
+</article>   
+
+
+
 
 {{end}}

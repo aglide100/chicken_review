@@ -5,3 +5,4 @@ function Submit() {
 function GoToRegPage() {
     location.href = '/login/register_page';
 }
+

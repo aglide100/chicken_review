@@ -49,10 +49,13 @@
 
 {{end}}
 {{define "content"}}
+{{template "create_view" .}}
+{{end}}
+
+{{define "contentHead"}}
 <link rel="stylesheet" href="/reviews/ui/css/create.css">
 <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKqrjW2Q04pOEISPvrgyGckgo3DjtUuE4&callback=initMap">
 </script>
 <script src="/reviews/ui/js/create.js"></script>
-{{template "create_view" .}}
 {{end}}

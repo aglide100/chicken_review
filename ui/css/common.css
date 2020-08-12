@@ -25,6 +25,9 @@
     .mobile_nav {
         visibility: hidden;
     }
+    .mobile_desc {
+        display: none;
+    }
     .nav {
         visibility:visible;
         margin-right:7%;
@@ -86,9 +89,11 @@
     .mobile_nav {
         visibility: visible;
         padding:2%;
-        display:inline;
-        float:center;
     }
+    .mobile_desc {
+        display: none;
+    }
+
     .mobile_desc li {
         list-style-type: none;
         font-family:Nanum Gothic;

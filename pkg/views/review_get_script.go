@@ -2,7 +2,6 @@ package views
 
 import (
 	"io"
-	"log"
 	"path/filepath"
 )
 
@@ -18,16 +17,12 @@ func NewReviewGetScriptView(htmlctx BaseHTMLContext, path string) View {
 func (view reviewGetScriptView) ContentType() string {
 	var contentType string
 
-	log.Printf("view.path before: %v", view.path)
 	view.path = view.path[16:]
 	ext := filepath.Ext(view.path)
-	log.Printf("view.path after: %v", view.path)
 	switch ext {
 	case ".js":
-		log.Printf("It is javascript, ", ext)
 		contentType = "text/javascript"
 	case ".css":
-		log.Printf("It is css,", ext)
 		contentType = "text/css"
 	}
 
