@@ -18,7 +18,6 @@ var DefaultBaseHTMLContext = BaseHTMLContext{
 				Title:       "Chicken Review",
 				Author:      "",
 				Description: "We review chicken restaurants",
-				ContentHead: bodyContent,
 			},
 			Body: ui.Body{Content: bodyContent},
 		}
