@@ -5,16 +5,16 @@ import (
 	"path/filepath"
 )
 
-type reviewGetScriptView struct {
+type reviewScriptView struct {
 	htmlctx BaseHTMLContext
 	path    string
 }
 
 func NewReviewGetScriptView(htmlctx BaseHTMLContext, path string) View {
-	return &reviewGetScriptView{htmlctx: htmlctx, path: path}
+	return &reviewScriptView{htmlctx: htmlctx, path: path}
 }
 
-func (view reviewGetScriptView) ContentType() string {
+func (view reviewScriptView) ContentType() string {
 	var contentType string
 
 	view.path = view.path[16:]
@@ -29,6 +29,6 @@ func (view reviewGetScriptView) ContentType() string {
 	return contentType
 }
 
-func (view reviewGetScriptView) Render(w io.Writer) error {
+func (view reviewScriptView) Render(w io.Writer) error {
 	return view.htmlctx.RenderImage(w, view.path)
 }

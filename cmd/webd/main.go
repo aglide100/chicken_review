@@ -108,8 +108,9 @@ func realMain() error {
 
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/css/.*", reviewsCtrl.GetScript)
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/js/.*", reviewsCtrl.GetScript)
+	rtr.AddRule("reviews", "GET", "^/reviews/pkg/assets/", reviewsCtrl.GetAssets)
 
-	// listenPort => 철자 오류로 뒤에서 고치기!!! listenPort -> extra string err
+	// listenPort => String err 발생함! listenPort -> extra string err
 	ln, err := net.Listen("tcp", ":80")
 	if err != nil {
 		return fmt.Errorf("creating network listener: %v", err)

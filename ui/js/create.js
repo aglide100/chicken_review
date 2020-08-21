@@ -1,87 +1,23 @@
-document.getElementById('write_date').value= new Date().toISOString().slice(0, -1);
-    document.getElementById('date').value=new Date().toISOString().substring(0,10);
 
-    function Submit() {
-        //alert("sending....");
-        document.storeForm.submit();
-    }
-
-
-
-/**
-         * Google Map API 주소의 callback 파라미터와 동일한 이름의 함수이다.
-         * Google Map API에서 콜백으로 실행시킨다.
-         */
-        function initMap() {
-            console.log('Map is initialized.');
- 
-            /**
-             * 맵을 설정한다.
-             * 1번째 파라미터 : 구글 맵을 표시할 위치. 여기서는 #google-map
-             * 2번째 파라미터 : 맵 옵션.
-             *      ㄴ zoom : 맵 확대 정도
-             *      ㄴ center : 맵 중심 좌표 설정
-             *              ㄴ lat : 위도 (latitude)
-             *              ㄴ lng : 경도 (longitude)
-             */
-            var map = new google.maps.Map(document.getElementById('google-map'), {
-                zoom: 12.5,
-                center: {
-                    lat: -34.397,
-                    lng: 150.644
-                }
-            });
- 
-            /**
-             * Google Geocoding. Google Map API에 포함되어 있다.
-             */
-            var geocoder = new google.maps.Geocoder();
- 
-            // submit 버튼 클릭 이벤트 실행
-            document.getElementById('submit').addEventListener('click', function() {
-                console.log('submit 버튼 클릭 이벤트 실행');
- 
-                // 여기서 실행
-                geocodeAddress(geocoder, map);
-            });
- 
-            /**
-             * geocodeAddress
-             * 
-             * 입력한 주소로 맵의 좌표를 바꾼다.
-             */
-            function geocodeAddress(geocoder, resultMap) {
-                console.log('geocodeAddress 함수 실행');
- 
-                // 주소 설정
-                var address = document.getElementById('address').value;
- 
-                /**
-                 * 입력받은 주소로 좌표에 맵 마커를 찍는다.
-                 * 1번째 파라미터 : 주소 등 여러가지. 
-                 *      ㄴ 참고 : https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingRequests
-                 * 
-                 * 2번째 파라미터의 함수
-                 *      ㄴ result : 결과값
-                 *      ㄴ status : 상태. OK가 나오면 정상.
-                 */
-                geocoder.geocode({'address': address}, function(result, status) {
-                    console.log(result);
-                    console.log(status);
- 
-                    if (status === 'OK') {
-                        resultMap.setCenter(result[0].geometry.location);
-                        resultMap.setZoom(18);
-                        var marker = new google.maps.Marker({
-                            map: resultMap,
-                            position: result[0].geometry.location
-                        });
- 
-                        console.log('latitude : ' + marker.position.lat());
-                        console.log('longitude : ' + marker.position.lng());
-                    } else {
-                        alert('지오코드가 다음의 이유로 성공하지 못했습니다 : ' + status);
-                    }
-                });
-            }
-        }
+nhn.husky.EZCreator.createInIFrame({
+    oAppRef: oEditors,
+    elPlaceHolder: "ir1", //textarea에서 지정한 id와 일치해야 합니다. 
+    //SmartEditor2Skin.html 파일이 존재하는 경로
+    sSkinURI: "/reviews/pkg/assets/smarteditor2-2.10.0/js/smart_editor2/SmartEditor2Skin_ko_KR.html",  
+    htParams : {
+    // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+    bUseToolbar : true,             
+    // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+    bUseVerticalResizer : true,     
+    // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+    bUseModeChanger : true,         
+    fOnBeforeUnload : function(){ // 실행 전 설정 내용
+                      
+         }
+    },fOnAppLoad : function(){
+          var contents = "기본으로 적용 적용될 내용을 입력합니다."
+        //기존 저장된 내용의 text 내용을 에디터상에 뿌려주고자 할때 사용
+        oEditors.getById["ir1"].exec("PASTE_HTML", [ contents ]);
+    },
+    fCreator : "createSEditor2"
+});

@@ -61,9 +61,8 @@
         opacity:1;
     }
     .footer {
-        position: fixed;
-        bottom: 0;
         background-color: lightgray;
+        margin-top: 10vw;
         margin-left: -1vw;
         width: 105vw;
         border-radius: 10px;
@@ -120,8 +119,6 @@
         opacity:1;
     }
     .footer {
-        position: fixed;
-        bottom: 0;
         height: 14vw;
         background-color: lightgray;
         margin-left: -1vw;

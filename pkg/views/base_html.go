@@ -29,8 +29,21 @@ type BaseHTMLContext struct {
 	HTML        func(bodyContent interface{}) ui.HTML
 }
 
+func (htmlctx *BaseHTMLContext) RenderAssets(w io.Writer, path string) error {
+
+	content, err := ioutil.ReadFile(path[9:])
+	if err != nil {
+		return nil
+	}
+
+	w.Write(content)
+
+	return nil
+}
+
 func (htmlctx *BaseHTMLContext) RenderImage(w io.Writer, path string) error {
 
+	// remove to /reviews/
 	content, err := ioutil.ReadFile(path[9:])
 	if err != nil {
 		return nil
