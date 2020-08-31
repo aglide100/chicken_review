@@ -82,7 +82,7 @@ func findString(resp http.ResponseWriter, req *http.Request, str string) (id int
 }
 
 func (hdl *ReviewController) GetScript(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("[review_func]: receive request to get script")
+	//log.Printf("[review_func]: receive request to get script")
 
 	view := views.NewReviewGetScriptView(views.DefaultBaseHTMLContext, req.URL.Path)
 	resp.Header().Set("Content-Type", view.ContentType())

@@ -16,8 +16,6 @@ import (
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/naver"
 
-	"github.com/markbates/goth/providers/google"
-
 	"github.com/aglide100/chicken_review_webserver/pkg/db"
 )
 
@@ -39,7 +37,7 @@ func realMain() error {
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
-	GoogleMaps := os.Getenv("GOOGLE_MAPS_API_KEY")
+	//GoogleMaps := os.Getenv("GOOGLE_MAPS_API_KEY")
 
 	log.Printf("ListenAddr : %v:%v, DBAddr : %v:%v, DBUser : %v, DBPWD : %v", listenAddr, listenPort, dbAddr, dbPort, dbUser, dbPassword)
 
@@ -47,11 +45,11 @@ func realMain() error {
 	callbackAddr := os.Getenv("CALLBACK_ADDR")
 	goth.UseProviders(
 		naver.New(os.Getenv("NAVER_KEY"), os.Getenv("NAVER_SECRET"), callbackAddr+"/auth/callback"),
-		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), callbackAddr+"/auth/callback"),
+		//google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("_SECRET"), callbackAddr+"/auth/callback"),
 	)
 	// add Api keys(GoogleMaps)
 	APIKeys := &models.APIKeys{
-		GoogleMaps: GoogleMaps,
+		//GoogleMaps: GoogleMaps,
 	}
 
 	//addr := net.JoinHostPort(listenAddr, listenPort)

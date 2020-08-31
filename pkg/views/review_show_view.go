@@ -21,6 +21,6 @@ func (view reviewShowView) ContentType() string {
 }
 
 func (view reviewShowView) Render(w io.Writer) error {
-	view.review.GoogleMapsApi = view.APIKeys.GoogleMaps
+	//view.review.GoogleMapsApi = view.APIKeys.GoogleMaps
 	return view.htmlctx.RenderUsing(w, "ui/reviews/show.gohtml", view.review)
 }
