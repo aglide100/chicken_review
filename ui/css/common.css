@@ -11,6 +11,11 @@
 }
     /* for a desktop */
 @media (min-width: 1281px) {
+    .body {
+        display: flex;
+        flex-direction: column;
+    }
+
     .content {
        font-family:Nanum Gothic;
         font-size: medium;
@@ -73,6 +78,11 @@
 }
 
 @media (max-width: 1280px) {
+    .body {
+        display: flex;
+        flex-direction: column;
+    }
+
     .content {
         font-family:Nanum Gothic;
         font-size: medium;

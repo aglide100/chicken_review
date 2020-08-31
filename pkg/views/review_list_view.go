@@ -20,5 +20,5 @@ func (view reviewListView) ContentType() string {
 }
 
 func (view reviewListView) Render(w io.Writer) error {
-	return view.htmlctx.RenderUsing(w, "ui/reviews/list.gohtml", view.reviews)
+	return view.htmlctx.RenderUsing(w, "ui/reviews/list.gohtml", view.reviews, nil)
 }

@@ -37,6 +37,7 @@ func realMain() error {
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
+	KakaoMaps := os.Getenv("KAKAO_MAPS_API_KEYS")
 	//GoogleMaps := os.Getenv("GOOGLE_MAPS_API_KEY")
 
 	log.Printf("ListenAddr : %v:%v, DBAddr : %v:%v, DBUser : %v, DBPWD : %v", listenAddr, listenPort, dbAddr, dbPort, dbUser, dbPassword)
@@ -49,7 +50,9 @@ func realMain() error {
 	)
 	// add Api keys(GoogleMaps)
 	APIKeys := &models.APIKeys{
+		KakaoMaps: KakaoMaps,
 		//GoogleMaps: GoogleMaps,
+
 	}
 
 	//addr := net.JoinHostPort(listenAddr, listenPort)

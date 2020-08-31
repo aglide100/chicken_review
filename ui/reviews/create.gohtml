@@ -11,14 +11,11 @@
     </p>
     <p>
         Location
-        <div id="search-panel">
-            <input id="address" type="text" value="대구광역시 북구 침산로 158" />
-            <button id="submit" type="button" value="Geocode">지도 검색</button>
-        </div>
+        <div id="map" style="width:500px;height:400px;"></div>
     <p>
         Date<br><br>
         <input type="date" name="date" id="date">
-        <input type="datetime" name="write_date" id="write_date" style="visibility: hidden;">
+        <input type="date" name="write_date" id="write_date"style="visibility: hidden;">
     </p>
     <p>
         Store's picture<br><br>
@@ -44,13 +41,16 @@
         <input type="submit" value="Submit" onclick=Submit() class="form_btn">
         <input type="button" onclick="location.href = '/reviews'"; value="Cancel" class="form_btn"/>
     </p>
+    <p>
+    api: {{.KakaoMaps}}
+    </p>
 </form>
 
 {{end}}
 {{define "content"}}
 <link rel="stylesheet" href="/reviews/ui/css/create.css">
 <script charset="utf-8" src="/reviews/pkg/assets/smarteditor2-2.10.0/js/smart_editor2/js/service/HuskyEZCreator.js" type="text/javascript"></script>
-<script src="/reviews/ui/js/create.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{.KakaoMaps}}"></script>
 <script src="/reviews/ui/js/create-Js.js"></script>
 {{template "create_view" .}}
 {{end}}

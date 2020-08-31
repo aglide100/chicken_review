@@ -15,5 +15,5 @@ func NewRegisterView(htmlctx BaseHTMLContext) View {
 }
 
 func (view RegisterView) Render(w io.Writer) error {
-	return view.htmlctx.RenderUsing(w, "ui/reviews/register.gohtml", nil)
+	return view.htmlctx.RenderUsing(w, "ui/reviews/register.gohtml", nil, nil)
 }

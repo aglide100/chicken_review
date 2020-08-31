@@ -11,7 +11,7 @@ import (
 
 var DefaultBaseHTMLContext = BaseHTMLContext{
 	GlobPattern: "ui/*.gohtml",
-	HTML: func(bodyContent interface{}) ui.HTML {
+	HTML: func(bodyContent interface{}, APIKeys interface{}) ui.HTML {
 		return ui.HTML{
 			Head: ui.Head{
 				FavIcoURL:   "",
@@ -19,14 +19,14 @@ var DefaultBaseHTMLContext = BaseHTMLContext{
 				Author:      "",
 				Description: "We review chicken restaurants",
 			},
-			Body: ui.Body{Content: bodyContent},
+			Body: ui.Body{Content: bodyContent, APIKeys: APIKeys},
 		}
 	},
 }
 
 type BaseHTMLContext struct {
 	GlobPattern string
-	HTML        func(bodyContent interface{}) ui.HTML
+	HTML        func(bodyContent interface{}, APIKeys interface{}) ui.HTML
 }
 
 func (htmlctx *BaseHTMLContext) RenderAssets(w io.Writer, path string) error {
@@ -43,7 +43,7 @@ func (htmlctx *BaseHTMLContext) RenderAssets(w io.Writer, path string) error {
 
 func (htmlctx *BaseHTMLContext) RenderImage(w io.Writer, path string) error {
 
-	// remove to /reviews/
+	// remove to /reviews/0
 	content, err := ioutil.ReadFile(path[9:])
 	if err != nil {
 		return nil
@@ -54,7 +54,10 @@ func (htmlctx *BaseHTMLContext) RenderImage(w io.Writer, path string) error {
 	return nil
 }
 
-func (htmlctx *BaseHTMLContext) RenderUsing(w io.Writer, contentPattern string, bodyContent interface{}) error {
+// 
+func (htmlctx *BaseHTMLContext) RenderUsingWithApi(w io.Writer, contentPattern string, bodyContent interface{}, API)
+
+func (htmlctx *BaseHTMLContext) RenderUsing(w io.Writer, contentPattern string, bodyContent interface{}, APIKeys interface{}) error {
 	baseT, err := template.ParseGlob(htmlctx.GlobPattern)
 	if err != nil {
 		return fmt.Errorf("parsing base html: %v", err)
@@ -64,7 +67,7 @@ func (htmlctx *BaseHTMLContext) RenderUsing(w io.Writer, contentPattern string, 
 		return fmt.Errorf("parsing reviews html: %v", err)
 	}
 
-	html := htmlctx.HTML(bodyContent)
+	html := htmlctx.HTML(bodyContent, APIKeys)
 	if err := contentT.ExecuteTemplate(w, "html", html); err != nil {
 		return fmt.Errorf("executing template: %v", err)
 	}
