@@ -5,11 +5,20 @@
             -webkit-border-radius: 7px;
         }
 
-        .storeForm p {
+        .storeForm div {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .storeForm div p {
             margin: 3% 8% auto;
         }
 
-        .storeForm input {
+        .storeForm div input {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
             -ms-box-sizing: border-box;
@@ -17,11 +26,11 @@
             border: 3px solid rgba(0,0,0,0);    
             border-radius: 5px;
             text-align: center;
-            background-color: #555;
+            width: 70%;
         }
 
-        .storeForm input:hover {
-            background-color: black;
+        .storeForm div input:hover {
+            background-color: #7d7d7d7d;
         }
 
         .create_title {

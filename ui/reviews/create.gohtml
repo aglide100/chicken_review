@@ -1,56 +1,60 @@
 {{define "create_view"}}
 <form enctype="multipart/form-data" action="/reviews/create/upload" method="post" name="storeForm" class="storeForm" >
     <h3 class="create_title">Please input info</h3>
-    <p>
-        <!--<h6>Store's name</h6>-->
-        <input name="store_name" placeholder="Store's name">
-    </p>
-    <p>
-        <!--<h6>Store's PhoneNumber</h6>-->
-        <input type="tel" name="phone_number" placeholder="Store's PhoneNumber">
-    </p>
-    <p>
-        Location
+    
+    <div>
+        <p>Store's name</p>
+        <input name="store_name" placeholder="ABC">
+    </div>
+
+    <div>
+        <p>Store's PhoneNumber</p>
+        <input type="tel" name="phone_number" placeholder="000-000-0000"> 
+    </div>
+
+    <div>
+        <p>Location</p>
         <div id="map" style="width:500px;height:400px;"></div>
-    <p>
-        Date<br><br>
+    </div>
+
+    <div>
+        <p>Date</p>
         <input type="date" name="date" id="date">
         <input type="date" name="write_date" id="write_date"style="visibility: hidden;">
-    </p>
-    <p>
-        Store's picture<br><br>
+    </div>
+
+    <div>
+        <p>Store's picture</p>
         <input type="file" name="image"  accept="image/x-png,image/gif,image/jpeg,image/png" multiple>
-    </p>
-    <p>
-        <!--<h6>Author</h6>-->
+    </div>
+
+    <div>
+        <p>Author</p>
         <input type="text" name="author" placeholder="Author">
-    </p>
-    <p>
-        <!--<h6>Title</h6>-->
+    </div>
+
+    <div>
+        <p>Title</p>
         <input type="text" name="title" maxlength="80" placeholder="Title">
-    </p>
-    <p>
-        <!--<h6>Comment</h6>-->
+    </div>
+
+    <div>
+        <p>Comment</p>
         <textarea rows="10" cols="50" name="comment" placeholder="Comment">
         </textarea>
-        <textarea rows="10" cols="30" id="ir1" style="width: 1500px; height: 600px;">
-        </textarea></td>
-    </p>
-    <p>
+    </div>
+
+    <div>
         <!--<input type="hidden" id="csrfToken" value='{{.csrfFiled}}'/>-->
         <input type="submit" value="Submit" onclick=Submit() class="form_btn">
-        <input type="button" onclick="location.href = '/reviews'"; value="Cancel" class="form_btn"/>
-    </p>
-    <p>
-    api: {{.KakaoMaps}}
-    </p>
+        <input type="button" onclick="location.href = '/reviews';" value="Cancel" class="form_btn"/>
+    </div>
 </form>
 
 {{end}}
 {{define "content"}}
 <link rel="stylesheet" href="/reviews/ui/css/create.css">
-<script charset="utf-8" src="/reviews/pkg/assets/smarteditor2-2.10.0/js/smart_editor2/js/service/HuskyEZCreator.js" type="text/javascript"></script>
+{{template "create_view" .}}
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{.KakaoMaps}}"></script>
 <script src="/reviews/ui/js/create-Js.js"></script>
-{{template "create_view" .}}
 {{end}}
