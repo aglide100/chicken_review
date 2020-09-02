@@ -117,7 +117,6 @@ func (hdl *ReviewController) GetImage(resp http.ResponseWriter, req *http.Reques
 
 func (hdl *ReviewController) Create(resp http.ResponseWriter, req *http.Request) {
 	log.Printf("[review_func]: receive request to create a review")
-	log.Printf("Log 3. check to review controller :%v", hdl.APIKeys)
 
 	view := views.NewReviewCreateView(views.DefaultBaseHTMLContext, hdl.APIKeys)
 

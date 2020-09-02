@@ -1,16 +1,21 @@
 
         .storeForm {
-            background-color: rgba(93, 93, 93, 0.4);
+            background-color: #F6F6F6;
+            /* background-color: rgba(93, 93, 93, 0.4); */
             -moz-border-radius: 7px;
-            -webkit-border-radius: 7px;
+            -webkit-border-radius: 10px;
+            border: 7px solid black;
         }
 
         .storeForm div {
             display: flex;
             flex-direction: row;
+            justify-content: center;
+            margin-bottom: 3.5%;
         }
 
         .storeForm div p {
+            width: 25%;
             margin: 3% 8% auto;
         }
 
@@ -26,11 +31,17 @@
             border: 3px solid rgba(0,0,0,0);    
             border-radius: 5px;
             text-align: center;
-            width: 70%;
+            width: 65%;
+            margin-right: 2%;
         }
 
         .storeForm div input:hover {
             background-color: #7d7d7d7d;
+        }
+
+        .storeForm div textarea {
+            width: 65%;
+            margin-right: 2%;
         }
 
         .create_title {
@@ -38,6 +49,12 @@
         }
 
         .form_btn {
+            display: flex;
+            justify-content: center;
+            width: 50%;
+            height:8% !important;
             margin: auto auto 5%;
+            margin-top: 5%;
+            color: #D5D5D5 !important;
         }
 

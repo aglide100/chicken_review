@@ -9,4 +9,5 @@ type APIKeys struct {
 	TwitterSecret  string
 	Facebook       string
 	FacebookSecret string
+	CsrfFiled      string
 }

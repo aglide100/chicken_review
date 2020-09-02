@@ -14,18 +14,18 @@
 
     <div>
         <p>Location</p>
+        <div>Search box</div>
         <div id="map" style="width:500px;height:400px;"></div>
     </div>
 
     <div>
         <p>Date</p>
         <input type="date" name="date" id="date">
-        <input type="date" name="write_date" id="write_date"style="visibility: hidden;">
     </div>
 
     <div>
         <p>Store's picture</p>
-        <input type="file" name="image"  accept="image/x-png,image/gif,image/jpeg,image/png" multiple>
+        <input type="file" name="image" accept="image/x-png,image/gif,image/jpeg,image/png" multiple>
     </div>
 
     <div>
@@ -44,17 +44,23 @@
         </textarea>
     </div>
 
+    <div class="form_btn">
+        <input type="submit" value="Submit" onclick="Submit()">
+        <input type="button" onclick="location.href = '/reviews'" value="Cancel">
+    </div>
+
     <div>
-        <!--<input type="hidden" id="csrfToken" value='{{.csrfFiled}}'/>-->
-        <input type="submit" value="Submit" onclick=Submit() class="form_btn">
-        <input type="button" onclick="location.href = '/reviews';" value="Cancel" class="form_btn"/>
+        <!--<input type="hidden" id="csrfToken" value='{{.CsrfFiled}}'/>-->
+        <input type="date" name="write_date" id="write_date"style="visibility: hidden;">
+        <input name="location" style="visibility: hidden;">
     </div>
 </form>
-
 {{end}}
+
 {{define "content"}}
 <link rel="stylesheet" href="/reviews/ui/css/create.css">
-{{template "create_view" .}}
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{.KakaoMaps}}"></script>
 <script src="/reviews/ui/js/create-Js.js"></script>
+
+{{template "create_view" .}}
 {{end}}

@@ -38,7 +38,6 @@ func realMain() error {
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 	KakaoMaps := os.Getenv("KAKAO_MAPS_API_KEYS")
-	log.Printf("log 1. receive kakao maps api: %v", KakaoMaps)
 	//GoogleMaps := os.Getenv("GOOGLE_MAPS_API_KEY")
 
 	log.Printf("ListenAddr : %v:%v, DBAddr : %v:%v, DBUser : %v, DBPWD : %v", listenAddr, listenPort, dbAddr, dbPort, dbUser, dbPassword)
@@ -54,8 +53,6 @@ func realMain() error {
 		KakaoMaps: KakaoMaps,
 		//GoogleMaps: GoogleMaps,
 	}
-	log.Printf("Log 2. Throw to APIKeys interface: %v", APIKeys)
-
 	//addr := net.JoinHostPort(listenAddr, listenPort)
 
 	dbport, _ := strconv.Atoi(dbPort)

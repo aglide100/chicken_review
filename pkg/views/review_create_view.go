@@ -2,7 +2,6 @@ package views
 
 import (
 	"io"
-	"log"
 
 	"github.com/aglide100/chicken_review_webserver/pkg/models"
 )
@@ -21,7 +20,6 @@ func (view reviewCreateView) ContentType() string {
 }
 
 func (view reviewCreateView) Render(w io.Writer) error {
-	log.Printf("log 4. kakao api in create view: %v", view.APIKeys)
 	return view.htmlctx.RenderUsing(w, "ui/reviews/create.gohtml", view.APIKeys)
 
 }
