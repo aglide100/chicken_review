@@ -20,5 +20,5 @@ func (view reviewDeleteView) ContentType() string {
 }
 
 func (view reviewDeleteView) Render(w io.Writer) error {
-	return view.htmlctx.RenderUsing(w, "ui/reviews/delete.gohtml", view.review, nil)
+	return view.htmlctx.RenderUsing(w, "ui/reviews/delete.gohtml", view.review)
 }

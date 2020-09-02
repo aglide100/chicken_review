@@ -21,5 +21,5 @@ func (view reviewUpdateView) ContentType() string {
 
 func (view reviewUpdateView) Render(w io.Writer) error {
 
-	return view.htmlctx.RenderUsing(w, "ui/reviews/update.gohtml", view.review, nil)
+	return view.htmlctx.RenderUsing(w, "ui/reviews/update.gohtml", view.review)
 }

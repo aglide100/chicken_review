@@ -17,7 +17,6 @@ type Head struct {
 
 type Body struct {
 	Content interface{}
-	APIKeys interface{}
 }
 
 type OGData struct {
