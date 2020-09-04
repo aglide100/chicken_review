@@ -4,20 +4,20 @@
 
 :root {
     --small-fontsize: 3vw;
+    
 
     /* footer mobile */
     --mobile-footer-fontsize: 20px;
     --mobile-footer-fontcolor: #7d7d7d;
 }
+.body {
+    display: flex;
+    flex-direction: column;
+    font-family:Nanum Gothic;
+}
     /* for a desktop */
-@media (min-width: 1281px) {
-    .body {
-        display: flex;
-        flex-direction: column;
-    }
-
+@media (min-width: 1025px) {
     .content {
-       font-family:Nanum Gothic;
         font-size: medium;
         margin-left: 5%;
         margin-right: 5%;
@@ -42,7 +42,7 @@
     }
     .desc li {
         list-style-type: none;
-        font-family:Nanum Gothic;
+        
         font-size: large;
         /*background-color: #f1f1f1;*/
     }
@@ -65,27 +65,32 @@
     .desc li a:hover:after {
         opacity:1;
     }
+    .open_footer {
+        visibility: hidden;
+    }
+
     .footer {
+        position: absolute;
+        bottom: 0;
         background-color: lightgray;
         margin-top: 10vw;
         margin-left: -1vw;
         width: 105vw;
         border-radius: 10px;
     }
+
+    .footer hr {
+        font-size: 0.5px;
+    }
+
     .footer p {
 
     }
 }
 
-@media (max-width: 1280px) {
-    .body {
-        display: flex;
-        flex-direction: column;
-    }
-
+@media (max-width: 1024px) {
     .content {
-        font-family:Nanum Gothic;
-        font-size: medium;
+        font-size: large;
         width:100%;
         height:auto;
     }
@@ -97,6 +102,7 @@
     }
     .mobile_nav {
         visibility: visible;
+        text-align: center;
         padding:2%;
     }
     .mobile_desc {
@@ -104,14 +110,14 @@
     }
 
     .mobile_desc li {
+        display: flex;
         list-style-type: none;
-        font-family:Nanum Gothic;
-        font-size: large;
-        /*background-color: #f1f1f1;*/
+        justify-content: space-around;
     }
     .mobile_desc li a {
         position:relative;
-        width:3%;
+        width:4.5%;
+        margin-right: 5%;
         color: #000;
         text-decoration: none;
     }
@@ -128,11 +134,16 @@
     .mobile_desc li a:hover:after {
         opacity:1;
     }
+
+    .open_footer {
+        text-align: center;
+    }
+    
     .footer {
+        display: none;
         height: 14vw;
         background-color: lightgray;
         margin-left: -1vw;
-        width: 105vw;
         border-radius: 10px;
     }
     .footer hr {
@@ -140,7 +151,7 @@
     }
 
     .footer p {
-        font-size: var(--mobile-footer-fontsize);
+        font-size: small;
         color: var(--mobile-footer-fontcolor);
         margin-left: 3vw;
     }

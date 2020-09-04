@@ -1,4 +1,24 @@
 {{define "create_view"}}
+ <div class="map_wrap">
+        <div id="map" class="map"></div>
+        
+        <div id="menu_wrap" class="bg_white">
+
+            <div class="close_kakaomap">지도 닫기</div>
+            <div class="option">
+                <div>
+                    <div>
+                        키워드 : <input type="text" value="치킨" id="keyword" size="15"> 
+                        <div onclick="searchPlaces();">검색하기</div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <ul id="placesList"></ul>
+            <div id="pagination"></div>
+        </div>
+</div>
+
 <form enctype="multipart/form-data" action="/reviews/create/upload" method="post" name="storeForm" class="storeForm" >
     <h3 class="create_title">Please input info</h3>
     
@@ -14,8 +34,8 @@
 
     <div>
         <p>Location</p>
-        <div>Search box</div>
-        <div id="map" style="width:500px;height:400px;"></div>
+        <div class="search_box">Search box</div>
+       
     </div>
 
     <div>
@@ -59,8 +79,8 @@
 
 {{define "content"}}
 <link rel="stylesheet" href="/reviews/ui/css/create.css">
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{.KakaoMaps}}"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{.KakaoMaps}}&libraries=services"></script>
 <script src="/reviews/ui/js/create-Js.js"></script>
-
+<script src="/reviews/ui/js/create.js"></script>
 {{template "create_view" .}}
 {{end}}

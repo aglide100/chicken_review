@@ -11,5 +11,4 @@ type Review struct {
 	ID                int64
 	PictureURLs       []string
 	DefaultPictureURL string
-	GoogleMapsApi     string
 }

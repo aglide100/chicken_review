@@ -17,6 +17,9 @@ func NewReviewGetScriptView(htmlctx BaseHTMLContext, path string) View {
 func (view reviewScriptView) ContentType() string {
 	var contentType string
 
+	//log.Printf("view path :%v ////////// %v", view.path, view.path[16:])
+	// /reviews/ui/css/common.css ////////// common.css
+	// 16자가 최소한의 경로
 	view.path = view.path[16:]
 	ext := filepath.Ext(view.path)
 	switch ext {

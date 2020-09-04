@@ -10,3 +10,6 @@ https://github.com/naver/smarteditor2
 
 markbates goth
 https://github.com/markbates/goth
+
+Swiperv6.1.3
+https://swiperjs.com/

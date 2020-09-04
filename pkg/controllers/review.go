@@ -82,7 +82,7 @@ func findString(resp http.ResponseWriter, req *http.Request, str string) (id int
 }
 
 func (hdl *ReviewController) GetScript(resp http.ResponseWriter, req *http.Request) {
-	//log.Printf("[review_func]: receive request to get script")
+	log.Printf("[review_func]: receive request to get script")
 
 	view := views.NewReviewGetScriptView(views.DefaultBaseHTMLContext, req.URL.Path)
 	resp.Header().Set("Content-Type", view.ContentType())
@@ -93,7 +93,7 @@ func (hdl *ReviewController) GetScript(resp http.ResponseWriter, req *http.Reque
 }
 
 func (hdl *ReviewController) GetAssets(resp http.ResponseWriter, req *http.Request) {
-	log.Printf("[review_func]: receive request to get Assets")
+	log.Printf("[review_func]: receive request to get assets")
 
 	view := views.NewReviewGetAssetsView(views.DefaultBaseHTMLContext, req.URL.Path)
 	resp.Header().Set("Content-Type", view.ContentType())
@@ -319,7 +319,6 @@ func SaveReview(resp http.ResponseWriter, req *http.Request, hdl *ReviewControll
 
 	}
 
-	//log.Printf("Title : %v", review.Title)
 	return review, nil, false, ""
 }
 
@@ -330,7 +329,7 @@ func (hdl *ReviewController) Save(resp http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		if xss {
 			log.Printf("%v", str)
-			http.Redirect(resp, req, "/Don't-Use-Script-or-Css-at-review", 301)
+			http.Redirect(resp, req, "/Don't-Use-Script-or-CSS-at-review", 301)
 		} else {
 			log.Fatal("Can't save review %v:", err)
 		}

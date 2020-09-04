@@ -107,7 +107,7 @@ func realMain() error {
 
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/css/.*", reviewsCtrl.GetScript)
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/js/.*", reviewsCtrl.GetScript)
-	rtr.AddRule("reviews", "GET", "^/reviews/pkg/assets/", reviewsCtrl.GetAssets)
+	rtr.AddRule("reviews", "GET", "^/reviews/ui/assets/", reviewsCtrl.GetAssets)
 
 	// listenPort => String err 발생함! listenPort -> extra string err
 	ln, err := net.Listen("tcp", ":80")
