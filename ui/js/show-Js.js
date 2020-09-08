@@ -1,8 +1,21 @@
 
-var swiper;
+//var swiper;
 
-function forDesktopSlider() {
-    swiper = new Swiper('.swiper-container', {
+
+function deleteReview() {
+    var check = confirm("delete review?");
+    if(check == true) {
+        var para = document.location.href.split("delete/");
+        var URI = "/delete/";
+        URI = URI + para;
+        location.href = URI;
+    }
+}
+
+
+
+//function forDesktopSlider() {
+    var swiper = new Swiper('.swiper-container', {
         pagination: {
           el: '.swiper-pagination',
           type: 'fraction',
@@ -13,10 +26,10 @@ function forDesktopSlider() {
         },
       });
 
-}
+//}
 
 function forMobileSlider() {
-    swiper = new Swiper('.swiper-container', {
+    var swiper = new Swiper('.swiper-container', {
         pagination: {
           el: '.swiper-pagination',
           dynamicBullets: true,

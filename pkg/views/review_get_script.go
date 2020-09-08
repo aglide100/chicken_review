@@ -2,6 +2,7 @@ package views
 
 import (
 	"io"
+	"log"
 	"path/filepath"
 )
 
@@ -20,8 +21,7 @@ func (view reviewScriptView) ContentType() string {
 	//log.Printf("view path :%v ////////// %v", view.path, view.path[16:])
 	// /reviews/ui/css/common.css ////////// common.css
 	// 16자가 최소한의 경로
-	view.path = view.path[16:]
-	ext := filepath.Ext(view.path)
+	ext := filepath.Ext(view.path[16:])
 	switch ext {
 	case ".js":
 		contentType = "text/javascript"
@@ -33,5 +33,6 @@ func (view reviewScriptView) ContentType() string {
 }
 
 func (view reviewScriptView) Render(w io.Writer) error {
-	return view.htmlctx.RenderImage(w, view.path)
+	log.Printf("view.path : %v", view.path)
+	return view.htmlctx.RenderFile(w, view.path)
 }

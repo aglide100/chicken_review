@@ -6,6 +6,7 @@ $(document).ready(function(){
             if( $(".map_wrap").is(":visible") ) {
                 $(".map_wrap").slideUp();
             } else {
+                $('html').scrollTop(0);
                 $(".map_wrap").slideDown('fast', function() {
                     reloadLayout();
                 });

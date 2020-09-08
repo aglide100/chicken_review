@@ -2,7 +2,7 @@
 {{define "img_view"}}
     {{range $pictures := .PictureURLs}}
         <div class="swiper-slide">
-            <img src="{{$pictures}}" onerror="document.getElementById(this.id).remove()" onclick="location.href = '{{$pictures}}';"/>
+            <img src="{{$pictures}}" onerror="document.getElementById(this.id).remove()" onclick="window.open('{{$pictures}}', "popup"); return false;"/>
         </div>
     {{end}}
 {{end}}
@@ -44,23 +44,24 @@
  
     <div>
         <button type="button" onclick="location.href = '/update/{{.ID}}'">Update review </button>
-        <button type="button" onclick="function deleteReview(){var check = confirm("delete review?");if(check == true) {location.href = '/delete/{{.ID}}';}};">Delete review</button>
+        <button type="button" onclick="deleteReview()">Delete review</button>
     </div>
-</article>
-<article class="content">
-    <!-- comment article -->
-
 </article>
 
 {{end}}
 
 {{define "content"}}
 <link rel="stylesheet" href="/reviews/ui/css/show.css">
-<script src="/reviews/ui/assets/swiper-bundle.min.js"></script>
-<link rel="stylesheet" href="/reviews/ui/assets/swiper-bundle.min.css">
+<script src="/reviews/ui/assets/swiper/swiper-bundle.js"></script>
+<!--
+<script src="/reviews/ui/assets/swiper/swiper-bundle.min.js"></script>
+-->
+<link rel="stylesheet" href="/reviews/ui/assets/swiper/swiper-bundle.css">
+<!--
+<link rel="stylesheet" href="/reviews/ui/assets/swiper/swiper-bundle.min.css">
+-->
 <script src="/reviews/ui/js/show-Js.js"></script>
 <script src="/reviews/ui/js/show.js"></script>
-
 
 {{template "show_view" .}}
 {{end}}

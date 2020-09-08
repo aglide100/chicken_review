@@ -21,7 +21,7 @@ import (
 
 func main() {
 	if err := realMain(); err != nil {
-		fmt.Errorf("%v", err)
+		log.Fatal(err)
 	}
 }
 
@@ -32,6 +32,8 @@ func realMain() error {
 
 	listenAddr := os.Getenv("LISTEN_ADDR")
 	listenPort := os.Getenv("LISTEN_PORT")
+	tlsCertFilepath := os.Getenv("TLS_CERT_FILEPATH")
+	tlsKeyFilepath := os.Getenv("TLS_KEY_FILEPATH")
 	dbAddr := os.Getenv("DB_ADDR")
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
@@ -109,8 +111,7 @@ func realMain() error {
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/js/.*", reviewsCtrl.GetScript)
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/assets/", reviewsCtrl.GetAssets)
 
-	// listenPort => String err 발생함! listenPort -> extra string err
-	ln, err := net.Listen("tcp", ":80")
+	ln, err := net.Listen("tcp", listenPort)
 	if err != nil {
 		return fmt.Errorf("creating network listener: %v", err)
 	}
@@ -119,8 +120,9 @@ func realMain() error {
 	srv := http.Server{Handler: rtr}
 	log.Printf("listening on address %q", ln.Addr().String())
 
-	err = srv.Serve(ln)
 	log.Printf("starting server at address %q", ln.Addr().String())
+	err = srv.ServeTLS(ln, tlsCertFilepath, tlsKeyFilepath)
+	//err = srv.Serve(ln)
 	if err != nil {
 		return fmt.Errorf("serving: %v", err)
 	}

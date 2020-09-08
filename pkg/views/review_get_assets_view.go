@@ -2,6 +2,7 @@ package views
 
 import (
 	"io"
+	"path/filepath"
 )
 
 type reviewAssetsView struct {
@@ -16,7 +17,13 @@ func NewReviewGetAssetsView(htmlctx BaseHTMLContext, path string) View {
 func (view reviewAssetsView) ContentType() string {
 	var contentType string
 
-	//view.path = view.path[16:]
+	ext := filepath.Ext(view.path)
+	switch ext {
+	case ".js":
+		contentType = "text/javascript"
+	case ".css":
+		contentType = "text/css"
+	}
 
 	return contentType
 }

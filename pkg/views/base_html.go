@@ -29,8 +29,8 @@ type BaseHTMLContext struct {
 	HTML        func(bodyContent interface{}) ui.HTML
 }
 
-func (htmlctx *BaseHTMLContext) RenderAssets(w io.Writer, path string) error {
-
+func (htmlctx *BaseHTMLContext) RenderFile(w io.Writer, path string) error {
+	// /reviews/ -> 9번째
 	content, err := ioutil.ReadFile(path[9:])
 	if err != nil {
 		return nil

@@ -1,4 +1,7 @@
 $(document).ready(function(){
+
+
+
     $(".mobile_nav").click(function(){
         if( $(".mobile_desc").is(":visible") ) {
             $(".mobile_desc").slideUp();
@@ -14,7 +17,4 @@ $(document).ready(function(){
             $(".footer").slideDown();
         }
     })
-
-    
-
 })
