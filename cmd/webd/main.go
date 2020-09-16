@@ -19,7 +19,24 @@ import (
 	"github.com/aglide100/chicken_review_webserver/pkg/db"
 )
 
+var (
+	listenHttpPort  = os.Getenv("LISTEN_HTTP_PORT")
+	listenAddr      = os.Getenv("LISTEN_ADDR")
+	listenPort      = os.Getenv("LISTEN_HTTPS_PORT")
+	tlsCertFilepath = os.Getenv("TLS_CERT_FILEPATH")
+	tlsKeyFilepath  = os.Getenv("TLS_KEY_FILEPATH")
+	dbAddr          = os.Getenv("DB_ADDR")
+	dbPort          = os.Getenv("DB_PORT")
+	dbUser          = os.Getenv("DB_USER")
+	dbPassword      = os.Getenv("DB_PASSWORD")
+	dbName          = os.Getenv("DB_NAME")
+	KakaoMaps       = os.Getenv("KAKAO_MAPS_API_KEYS")
+)
+
 func main() {
+
+	go http.ListenAndServe(":80", http.HandlerFunc(redirect))
+
 	if err := realMain(); err != nil {
 		log.Fatal(err)
 	}
@@ -27,20 +44,21 @@ func main() {
 
 var store = sessions.NewCookieStore(securecookie.GenerateRandomKey(32))
 
+func redirect(w http.ResponseWriter, req *http.Request) {
+	//target := "https://" + req.Host + "/reviews"
+	// for Using local system
+	target := "https://" + req.Host + ":12500" + "/reviews"
+	if len(req.URL.RawQuery) > 0 {
+		target += "?" + req.URL.RawQuery
+	}
+	log.Printf("redirect to: %s", target)
+	http.Redirect(w, req, target,
+		// see comments below and consider the codes 308, 302, or 301
+		http.StatusTemporaryRedirect)
+}
+
 func realMain() error {
 	log.Printf("start realMain")
-
-	listenAddr := os.Getenv("LISTEN_ADDR")
-	listenPort := os.Getenv("LISTEN_PORT")
-	tlsCertFilepath := os.Getenv("TLS_CERT_FILEPATH")
-	tlsKeyFilepath := os.Getenv("TLS_KEY_FILEPATH")
-	dbAddr := os.Getenv("DB_ADDR")
-	dbPort := os.Getenv("DB_PORT")
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
-	KakaoMaps := os.Getenv("KAKAO_MAPS_API_KEYS")
-	//GoogleMaps := os.Getenv("GOOGLE_MAPS_API_KEY")
 
 	log.Printf("ListenAddr : %v:%v, DBAddr : %v:%v, DBUser : %v, DBPWD : %v", listenAddr, listenPort, dbAddr, dbPort, dbUser, dbPassword)
 
@@ -121,6 +139,7 @@ func realMain() error {
 	log.Printf("listening on address %q", ln.Addr().String())
 
 	log.Printf("starting server at address %q", ln.Addr().String())
+
 	err = srv.ServeTLS(ln, tlsCertFilepath, tlsKeyFilepath)
 	//err = srv.Serve(ln)
 	if err != nil {

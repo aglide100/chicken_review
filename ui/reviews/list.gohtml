@@ -2,7 +2,7 @@
 <!--Using default picture! -->
 {{define "list_view_pic_item"}}
     <div onclick="location.href = '/reviews/{{.ID}}'" class="thumbnail">
-        <img src="reviews/{{.DefaultPictureURL}}" class="image" onerror="this.style.background = 'coral'" />
+        <img src="reviews/{{.DefaultPictureURL}}" id="review-image" class="image" onerror="this.style.background = 'coral'this.src='reviews/ui/img/error.png'" />
         <div class="outline">
             <p>{{.Title}}  </p>
             <hr size="0.5px"></hr>
@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <link rel="stylesheet" href="/reviews/ui/css/list.css">
-<!--<script src="reviews/ui/js/list.js"></script>-->
+<!--<script src="reviews/ui/js/list-Js.js"></script>-->
 
 <div onclick="location.href = '/reviews/create'">
     <h3>Create a new review</h3>

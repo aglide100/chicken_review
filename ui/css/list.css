@@ -12,8 +12,8 @@
         clear:both;
         min-width:100%;
         min-height:100%;
-        width:100%;
-        height:100%;
+        width:20vw;
+        height:20vh;
     }
     
     .content .image_list {
@@ -80,13 +80,17 @@
         margin-right: auto;
         display: none;
     }
+
+    .Search-button {
+        margin-bottom: 1vw;
+    }
     .image {
-        display:inline-block;
+        display:-webkit-box;
         float:left;
-        min-width:30%;
-        min-height:inherit;
-        width:23%;
-        height:auto;
+        min-width:23vw;
+        min-height:23vw;
+        max-width: 30vw;
+        max-height: 30vw;
     }
     .image_list {
         width:100%;

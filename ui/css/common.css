@@ -70,12 +70,9 @@
     }
 
     .footer {
-        position: absolute;
         bottom: 0;
         background-color: lightgray;
-        margin-top: 10vw;
-        margin-left: -1vw;
-        width: 105vw;
+        width: 99vw;
         border-radius: 10px;
     }
 
