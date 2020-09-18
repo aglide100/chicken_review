@@ -2,7 +2,7 @@
 <!--Using default picture! -->
 {{define "list_view_pic_item"}}
     <div onclick="location.href = '/reviews/{{.ID}}'" class="thumbnail">
-        <img src="reviews/{{.DefaultPictureURL}}" id="review-image" class="image" onerror="this.style.background = 'coral'this.src='reviews/ui/img/error.png'" />
+        <img src="reviews/{{.DefaultPictureURL}}" id="review-image" class="image" onerror="this.style.background = 'coral';this.src='reviews/ui/img/error.png'" />
         <div class="outline">
             <p>{{.Title}}  </p>
             <hr size="0.5px"></hr>

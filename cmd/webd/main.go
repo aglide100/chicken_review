@@ -30,6 +30,7 @@ var (
 	dbUser          = os.Getenv("DB_USER")
 	dbPassword      = os.Getenv("DB_PASSWORD")
 	dbName          = os.Getenv("DB_NAME")
+	callbackAddr    = os.Getenv("CALLBACK_ADDR")
 	KakaoMaps       = os.Getenv("KAKAO_MAPS_API_KEYS")
 )
 
@@ -63,7 +64,6 @@ func realMain() error {
 	log.Printf("ListenAddr : %v:%v, DBAddr : %v:%v, DBUser : %v, DBPWD : %v", listenAddr, listenPort, dbAddr, dbPort, dbUser, dbPassword)
 
 	/* Using goth */
-	callbackAddr := os.Getenv("CALLBACK_ADDR")
 	goth.UseProviders(
 		naver.New(os.Getenv("NAVER_KEY"), os.Getenv("NAVER_SECRET"), callbackAddr+"/auth/callback"),
 		//google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("_SECRET"), callbackAddr+"/auth/callback"),
@@ -73,7 +73,7 @@ func realMain() error {
 		KakaoMaps: KakaoMaps,
 		//GoogleMaps: GoogleMaps,
 	}
-	//addr := net.JoinHostPort(listenAddr, listenPort)
+	addr := net.JoinHostPort(listenAddr, listenPort)
 
 	dbport, _ := strconv.Atoi(dbPort)
 	myDB, err := db.ConnectDB(dbAddr, dbport, dbUser, dbPassword, dbName)
@@ -129,7 +129,8 @@ func realMain() error {
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/js/.*", reviewsCtrl.GetScript)
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/assets/", reviewsCtrl.GetAssets)
 
-	ln, err := net.Listen("tcp", listenPort)
+	ln, err := net.Listen("tcp", addr)
+	//ln, err := net.Listen("tcp", listenPort)
 	if err != nil {
 		return fmt.Errorf("creating network listener: %v", err)
 	}
