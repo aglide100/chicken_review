@@ -20,9 +20,11 @@ import (
 )
 
 var (
-	listenHttpPort  = os.Getenv("LISTEN_HTTP_PORT")
+	//listenHttpPort  = os.Getenv("LISTEN_HTTP_PORT")
 	listenAddr      = os.Getenv("LISTEN_ADDR")
 	listenPort      = os.Getenv("LISTEN_HTTPS_PORT")
+	hostHTTPport    = os.Getenv("HOST_HTTP_PORT")
+	hostHTTPSport   = os.Getenv("HOST_HTTPS_PORT")
 	tlsCertFilepath = os.Getenv("TLS_CERT_FILEPATH")
 	tlsKeyFilepath  = os.Getenv("TLS_KEY_FILEPATH")
 	dbAddr          = os.Getenv("DB_ADDR")
@@ -35,8 +37,8 @@ var (
 )
 
 func main() {
-
-	go http.ListenAndServe(":80", http.HandlerFunc(redirect))
+	// return to https connection
+	go http.ListenAndServe(":"+hostHTTPport, http.HandlerFunc(redirect))
 
 	if err := realMain(); err != nil {
 		log.Fatal(err)
@@ -46,16 +48,18 @@ func main() {
 var store = sessions.NewCookieStore(securecookie.GenerateRandomKey(32))
 
 func redirect(w http.ResponseWriter, req *http.Request) {
-	//target := "https://" + req.Host + "/reviews"
-	// for Using local system
-	target := "https://" + req.Host + ":12500" + "/reviews"
+	// for Using html5 function, so redirect to https connection
+	var target string
+	if hostHTTPSport == "443" {
+		target = "https://" + req.Host + "/reviews"
+	} else {
+		target = "https://" + req.Host + ":" + hostHTTPSport + "/reviews"
+	}
 	if len(req.URL.RawQuery) > 0 {
 		target += "?" + req.URL.RawQuery
 	}
 	log.Printf("redirect to: %s", target)
-	http.Redirect(w, req, target,
-		// see comments below and consider the codes 308, 302, or 301
-		http.StatusTemporaryRedirect)
+	http.Redirect(w, req, target, 301)
 }
 
 func realMain() error {
@@ -130,7 +134,6 @@ func realMain() error {
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/assets/", reviewsCtrl.GetAssets)
 
 	ln, err := net.Listen("tcp", addr)
-	//ln, err := net.Listen("tcp", listenPort)
 	if err != nil {
 		return fmt.Errorf("creating network listener: %v", err)
 	}
