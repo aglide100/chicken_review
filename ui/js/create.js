@@ -8,7 +8,8 @@ $(document).ready(function(){
             } else {
                 $('html').scrollTop(0);
                 $(".map_wrap").slideDown('fast', function() {
-                    reloadLayout();
+                    //getLoacation();
+                    initMap();
                 });
             }
             

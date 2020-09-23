@@ -70,7 +70,8 @@
     }
 
     .footer {
-        position: absolute;
+        display: none;
+        position: fixed;
         bottom: 0;
         background-color: lightgray;
         width: 99vw;
