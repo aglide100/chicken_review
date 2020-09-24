@@ -20,36 +20,48 @@ window.addEventListener('DOMContentLoaded', function(){
 
 
 
+
 function reloadLayout() {
     map.relayout();
 }
 
-function getLoacation() {
+function newLocation(){
+    
     if (navigator.geolocation) {
 
         // GeoLocation을 이용해서 접속 위치를 얻어옵니다
         navigator.geolocation.getCurrentPosition(function(position) {
 
-            lat = position.coords.latitude; // 위도
-            lon = position.coords.longitude; // 경도
+            var lat = position.coords.latitude; // 위도
+            var lon = position.coords.longitude; // 경도
 
-            console.log("getLoaction: ");
-            console.log(lat,lon);
-
-            return lat, lon;
+            var obj = {
+                lat: lat,
+                lon: lon
+            };            
+            return obj;
           });
       
     } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
             message = 'geolocation을 사용할수 없어요..';
             console.log(message);
-            return null, null;
+            var obj = {
+                lat: null,
+                lon: null
+            };
+
+            return obj;
     }
 }
 
 
 function initMap() {
     if((lat == undefined) || (lon == undefined)) {
-        lat, lon = getLoacation();
+        var loc = new Object();
+        loc = newLocation();
+        console.log("loction 객채의 값: ",loc.lat, loc.lon)
+        var lat = loc[lat];
+        var lon = loc[lon];
 
         if((lat == undefined) || (lon == undefined)) {
             var locPositions = new kakao.maps.LatLng(40.450701, 100.570667),    
