@@ -19,6 +19,10 @@ type Body struct {
 	Content interface{}
 }
 
+type Lang struct {
+	Data interface{}
+}
+
 type OGData struct {
 	Title        string
 	Type         string

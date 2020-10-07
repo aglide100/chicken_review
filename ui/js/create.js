@@ -9,7 +9,7 @@ $(document).ready(function(){
                 $('html').scrollTop(0);
                 $(".map_wrap").slideDown('fast', function() {
                     //getLoacation();
-                    initMap();
+                    newLocation();
                 });
             }
             

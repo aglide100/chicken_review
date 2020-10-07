@@ -35,52 +35,30 @@ function newLocation(){
             var lat = position.coords.latitude; // 위도
             var lon = position.coords.longitude; // 경도
 
-            var obj = {
-                lat: lat,
-                lon: lon
-            };            
-            return obj;
+            initMap(lat, lon);         
           });
       
     } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
             message = 'geolocation을 사용할수 없어요..';
             console.log(message);
-            var obj = {
-                lat: null,
-                lon: null
-            };
-
-            return obj;
-    }
+            alert(menubar);
+    } 
 }
 
 
-function initMap() {
+function initMap(lat, lon) {
     if((lat == undefined) || (lon == undefined)) {
-        var loc = new Object();
-        loc = newLocation();
-        console.log("loction 객채의 값: ",loc.lat, loc.lon)
-        var lat = loc[lat];
-        var lon = loc[lon];
+        var locPositions = new kakao.maps.LatLng(40.450701, 100.570667),    
+        message = 'geolocation을 사용할수 없어요..'
+        console.log(message);
+        searchMap(locPositions);
+    } else {
+        console.log(lat, lon);
+        var locPositions = new kakao.maps.LatLng(lat,lon);
 
-        if((lat == undefined) || (lon == undefined)) {
-            var locPositions = new kakao.maps.LatLng(40.450701, 100.570667),    
-            message = 'geolocation을 사용할수 없어요..'
-            console.log(message);
-            searchMap(locPositions);
-        } else {
-            console.log(lat, lon);
-            var locPositions = new kakao.maps.LatLng(lat,lon);
-
-            displayMarker(locPositions, "find!");
-            //searchMap(locPosition);
-        }
-        
-        
-    } 
-
-    
-
+        //displayMarker(locPositions, "find!");
+        searchMap(locPositions);
+    }
 
 }
 

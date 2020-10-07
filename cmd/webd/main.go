@@ -127,7 +127,7 @@ func realMain() error {
 
 	// URI ex) reviews/ui/img/1/0/1.jpeg
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/img/([0-9]+)/[a-z0-9_+.-]/[a-z0-9A-Z_+.-.\\s.-]+.(?i)(img|jpg|jpeg|png|gif)$", reviewsCtrl.GetImage)
-	rtr.AddRule("reviews", "GET", "^/reviews/ui/logo/.*", reviewsCtrl.GetImage)
+	rtr.AddRule("reviews", "GET", "^/reviews/ui/img/logo/([A-Za-z0-9])/[a-z0-9A-Z_+.-.\\s.-]+.(?i)(img|jpg|jpeg|png)$", reviewsCtrl.GetImage)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/css/.*", reviewsCtrl.GetScript)
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/js/.*", reviewsCtrl.GetScript)
