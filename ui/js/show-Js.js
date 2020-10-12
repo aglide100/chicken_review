@@ -14,27 +14,11 @@ function deleteReview() {
     }
 }
 
-
-
-//function forDesktopSlider() {
-    var swiper = new Swiper('.swiper-container', {
-        pagination: {
-          el: '.swiper-pagination',
-          type: 'fraction',
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-      });
-
-//}
-
-function forMobileSlider() {
-    var swiper = new Swiper('.swiper-container', {
-        pagination: {
-          el: '.swiper-pagination',
-          dynamicBullets: true,
-        },
-      });
-}
+var swiper = new Swiper('.swiper-container', {
+  slidesPerView: 3,
+  spaceBetween: 30,
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true,
+  },
+});

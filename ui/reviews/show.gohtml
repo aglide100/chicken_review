@@ -2,11 +2,10 @@
 {{define "img_view"}}
     {{range $pictures := .PictureURLs}}
         <div class="swiper-slide">
-            <img src="{{$pictures}}" onerror="document.getElementById(this.id).remove()" onclick="window.open('{{$pictures}}', "popup"); return false;"/>
+            <img src="{{$pictures}}" onerror="document.getElementById(this.id).remove()" onclick="window.open('{{$pictures}}', 'popup'); return false;"/>
         </div>
     {{end}}
 {{end}}
-
 
 {{define "show_view"}}
 <article class="content"]>
@@ -22,15 +21,12 @@
         </div>
         <!-- Add Pagination -->
         <div class="swiper-pagination"></div>
-        <!-- Add Arrows -->
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
     </div>
         
 
     </header>
     
-    <details class="details">
+    <div class="details">
         <summary>Details</summary>
         
         <p>Phone Number : {{.PhoneNumber}}</p>
@@ -39,7 +35,7 @@
         </p>
         <h3>{{.Title}}</h3>
         {{.Comment}}
-    </details>
+    </div>
     <p>posted on <time datetime={{.Date}}>{{.Date}}</time> by {{.Author}}</p>
  
     <div>
@@ -60,8 +56,12 @@
 <!--
 <link rel="stylesheet" href="/reviews/ui/assets/swiper/swiper-bundle.min.css">
 -->
-<script src="/reviews/ui/js/show-Js.js"></script>
+<!--
 <script src="/reviews/ui/js/show.js"></script>
+-->
 
 {{template "show_view" .}}
+
+
+<script src="/reviews/ui/js/show-Js.js"></script>
 {{end}}

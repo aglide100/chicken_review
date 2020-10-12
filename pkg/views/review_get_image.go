@@ -2,6 +2,7 @@ package views
 
 import (
 	"io"
+	"log"
 	"path/filepath"
 )
 
@@ -21,6 +22,7 @@ func (view reviewGetImageView) ContentType() string {
 	switch view.format {
 	case "ReviewImage":
 		view.path = view.path[9:]
+		log.Printf("view.path: %v", view.path)
 		ext = filepath.Ext(view.path)
 	case "":
 
@@ -30,6 +32,8 @@ func (view reviewGetImageView) ContentType() string {
 	case ".png":
 		contentType = "image/png"
 	case ".jpg":
+		contentType = "image/jpeg"
+	case ".jpeg":
 		contentType = "image/jpeg"
 	case ".gif":
 		contentType = "image/gif"

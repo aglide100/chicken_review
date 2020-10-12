@@ -156,7 +156,7 @@ func (hdl *ReviewController) Delete(resp http.ResponseWriter, req *http.Request)
 	log.Printf("[review_func]: receive request to delete a review")
 
 	id, _, _ := findString(resp, req, "Delete")
-	log.Printf("Delete ID :%v", id)
+	log.Printf("Delete Review ID :%v", id)
 	hdl.db.DeleteReview(id)
 
 	http.Redirect(resp, req, "/reviews", 301)
