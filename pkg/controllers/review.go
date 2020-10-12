@@ -37,7 +37,7 @@ func findString(resp http.ResponseWriter, req *http.Request, str string) (id int
 	var deleteReviewPattern = regexp.MustCompile("^/delete/([0-9]+$)")
 	var updateReviewPattern = regexp.MustCompile("^/update/([0-9]+$)")
 	var uploadUpdateReviewPattern = regexp.MustCompile("^/reviews/update/upload/([0+9+])$")
-	var listReviewPattern = regexp.MustCompile("^reviews/([A-Z]+)-pagenumber=([0-9]+)$")
+	var listReviewPattern = regexp.MustCompile("^/reviews/([A-Z]+)-pagenumber=([0-9]+)$")
 
 	switch str {
 	case "Show":
