@@ -2,7 +2,6 @@ package views
 
 import (
 	"io"
-	"log"
 	"path/filepath"
 )
 
@@ -33,6 +32,6 @@ func (view reviewScriptView) ContentType() string {
 }
 
 func (view reviewScriptView) Render(w io.Writer) error {
-	log.Printf("view.path : %v", view.path)
+	//log.Printf("view.path : %v", view.path)
 	return view.htmlctx.RenderFile(w, view.path)
 }

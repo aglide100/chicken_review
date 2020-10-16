@@ -167,8 +167,9 @@ func (hdl *LoginController) AuthGoth(resp http.ResponseWriter, req *http.Request
 
 			resp.Header().Set("Location", "/")
 			resp.WriteHeader(http.StatusTemporaryRedirect)
+		} else {
+			resp.Header().Set("Location", "/")
 		}
-
 	} else {
 		gothic.BeginAuthHandler(resp, req)
 

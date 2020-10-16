@@ -96,16 +96,17 @@ func realMain() error {
 
 	rtr.AddRule("default", "GET", "^/$", defaultCtrl.ServeHTTP)
 
-	rtr.AddRule("login", "GET", "^/login/register_page", loginCtrl.Register_Page)
+	rtr.AddRule("login", "GET", "^/login/register_page$", loginCtrl.Register_Page)
 	rtr.AddRule("login", "POST", "^/login/sign_up", loginCtrl.Register)
 
 	rtr.AddRule("login", "GET", "^/login", loginCtrl.LoginCheck)
 	rtr.AddRule("login", "POST", "^/login/log_In", loginCtrl.LogIn)
 	rtr.AddRule("login", "GET", "^/login/log_Out", loginCtrl.LogOut)
 
-	rtr.AddRule("login", "GET", "^/auth", loginCtrl.AuthGoth)
+	rtr.AddRule("login", "GET", "^/auth/([A-Za-z])", loginCtrl.AuthGoth)
 	rtr.AddRule("login", "GET", "^/auth/logout/([A-Za-z])", loginCtrl.GothLogOut)
 	rtr.AddRule("login", "GET", "^/auth/callback?", loginCtrl.GothCallBack)
+	rtr.AddRule("login", "GET", "^/auth/([a-zA-Z])/callback", loginCtrl.GothCallBack)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/?$", reviewsCtrl.List)
 	rtr.AddRule("reviews", "GET", "^reviews/([A-Z]{1,3})-pagenumber=([0-9]+)$", reviewsCtrl.List)
@@ -128,6 +129,7 @@ func realMain() error {
 	// URI ex) reviews/ui/img/1/0/1.jpeg
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/img/([0-9]+)/[a-z0-9_+.-]/[a-z0-9A-Z_+.-.\\s.-]+.(?i)(img|jpg|jpeg|png|gif)$", reviewsCtrl.GetImage)
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/logo/[a-zA-Z]*/[a-z0-9A-Z_+.-.\\s.-]+.(?i)(img|jpg|jpeg|png|gif)$", reviewsCtrl.GetImage)
+	rtr.AddRule("reviews", "GET", "^/reviews/ui/err/no_image.png$", reviewsCtrl.GetImage)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/css/.*", reviewsCtrl.GetScript)
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/js/.*", reviewsCtrl.GetScript)

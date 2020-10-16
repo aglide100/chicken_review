@@ -1,0 +1,13 @@
+@media (min-width: 1281px) {
+    .registerForm {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        
+    }
+
+}
+/* for Mobile */
+@media (max-width: 1280px) { 
+
+}
