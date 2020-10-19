@@ -436,3 +436,13 @@ func (hdl *ReviewController) List(resp http.ResponseWriter, req *http.Request) {
 		log.Printf("failed to render : %v", err)
 	}
 }
+
+func (hdl *ReviewController) Temp(resp http.ResponseWriter, req *http.Request) {
+	log.Print("Get temp html")
+	view := views.NewReviewGetTempView(views.DefaultBaseHTMLContext)
+	resp.Header().Set("Content-Type", view.ContentType())
+	err := view.Render(resp)
+	if err != nil {
+		log.Printf("failed")
+	}
+}
