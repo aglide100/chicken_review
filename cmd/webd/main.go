@@ -14,6 +14,7 @@ import (
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"github.com/markbates/goth"
+	"github.com/markbates/goth/providers/google"
 	"github.com/markbates/goth/providers/naver"
 
 	"github.com/aglide100/chicken_review_webserver/pkg/db"
@@ -69,8 +70,8 @@ func realMain() error {
 
 	/* Using goth */
 	goth.UseProviders(
-		naver.New(os.Getenv("NAVER_KEY"), os.Getenv("NAVER_SECRET"), callbackAddr+"/auth/callback"),
-		//google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("_SECRET"), callbackAddr+"/auth/callback"),
+		naver.New(os.Getenv("NAVER_KEY"), os.Getenv("NAVER_SECRET"), callbackAddr+"/auth/callback?provider=naver"),
+		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("_SECRET"), callbackAddr+"/auth/callback"),
 	)
 	// add Api keys(GoogleMaps)
 	APIKeys := &models.APIKeys{
@@ -103,12 +104,13 @@ func realMain() error {
 	rtr.AddRule("login", "POST", "^/login/log_In", loginCtrl.LogIn)
 	rtr.AddRule("login", "GET", "^/login/log_Out", loginCtrl.LogOut)
 
-	rtr.AddRule("login", "GET", "^/auth/([A-Za-z])", loginCtrl.AuthGoth)
-	rtr.AddRule("login", "GET", "^/auth/logout/([A-Za-z])", loginCtrl.GothLogOut)
-	rtr.AddRule("login", "GET", "^/auth/callback?", loginCtrl.GothCallBack)
-	rtr.AddRule("login", "GET", "^/auth/([a-zA-Z])/callback", loginCtrl.GothCallBack)
+	rtr.AddRule("login", "GET", "^/auth", loginCtrl.AuthGoth)
+	rtr.AddRule("login", "GET", "^/auth[?]provider=[a-zA-Z]*$", loginCtrl.AuthGoth)
+	rtr.AddRule("login", "GET", "^/auth/logout/([A-Za-z])$", loginCtrl.GothLogOut)
+	rtr.AddRule("login", "GET", "^/auth/callback[?]provider[=][a-zA-Z]*$", loginCtrl.GothCallBack)
+	//rtr.AddRule("login", "GET", "^/auth/callback", loginCtrl.GothCallBack)
 
-	rtr.AddRule("reviews", "GET", "^/test$", reviewsCtrl.Temp)
+	//rtr.AddRule("reviews", "GET", "^/test$", reviewsCtrl.Temp)
 
 	rtr.AddRule("reviews", "GET", "^/reviews/?$", reviewsCtrl.List)
 	rtr.AddRule("reviews", "GET", "^reviews/([A-Z]{1,3})-pagenumber=([0-9]+)$", reviewsCtrl.List)
@@ -135,7 +137,7 @@ func realMain() error {
 
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/css/.*", reviewsCtrl.GetScript)
 	rtr.AddRule("reviews", "GET", "^/reviews/ui/js/.*", reviewsCtrl.GetScript)
-	rtr.AddRule("reviews", "GET", "^/reviews/ui/assets/", reviewsCtrl.GetAssets)
+	//rtr.AddRule("reviews", "GET", "^/reviews/ui/assets/", reviewsCtrl.GetAssets)
 
 	ln, err := net.Listen("tcp", addr)
 	if err != nil {
