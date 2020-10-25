@@ -2,10 +2,9 @@ package controllers
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
-	"regexp"
-	"strings"
 
 	"github.com/aglide100/chicken_review_webserver/pkg/db"
 	"github.com/aglide100/chicken_review_webserver/pkg/models"
@@ -24,25 +23,6 @@ type LoginController struct {
 func NewLoginController(db *db.Database, store *sessions.CookieStore) *LoginController {
 
 	return &LoginController{db: db, store: store}
-}
-
-func findProvider(resp http.ResponseWriter, req *http.Request) string {
-	var matches []string
-
-	var authProviderPattern = regexp.MustCompile("^/auth/[A-Za-z]")
-
-	matches = authProviderPattern.FindStringSubmatch(req.URL.Path)
-
-	result := strings.Join(matches, "")
-
-	switch result {
-	case "naver":
-		return result
-	case "github":
-		return result
-	default:
-		return "No match providers"
-	}
 }
 
 func (hdl *LoginController) Register_Page(resp http.ResponseWriter, req *http.Request) {
@@ -152,6 +132,17 @@ func (hdl *LoginController) LogOut(resp http.ResponseWriter, req *http.Request) 
 	// 세션 지우기
 }
 
+var userTemplate = `
+<p>Name: {{.Name}}</p>
+<p>Email: {{.Email}}</p>
+<p>NickName: {{.NickName}}</p>
+<p>Location: {{.Location}}</p>
+<p>AvatarURL: {{.AvatarURL}} <img src="{{.AvatarURL}}"></p>
+<p>Description: {{.Description}}</p>
+<p>UserID: {{.UserID}}</p>
+<p>AccessToken: {{.AccessToken}}</p>
+`
+
 /* Check Provider(Goauth) User */
 func (hdl *LoginController) AuthGoth(resp http.ResponseWriter, req *http.Request) {
 	log.Printf("[login_func]: receive request to goauth")
@@ -179,22 +170,15 @@ func (hdl *LoginController) AuthGoth(resp http.ResponseWriter, req *http.Request
 			IDToken:           usr.IDToken,
 		}
 
+		t, _ := template.New("foo").Parse(userTemplate)
+		t.Execute(resp, usr)
+
 		err = hdl.db.RegisterNewGoauthUser(user)
 		if err != nil {
 			log.Printf("Can't register Goauth User: %v", err)
-			User := &models.User{
-				UserID: user.UserID,
-			}
-			SessionControl(hdl, resp, req, User, "save")
-
 			http.Redirect(resp, req, "/reviews", 301)
-			//resp.Header().Set("Location", "/")
-			//resp.WriteHeader(http.StatusTemporaryRedirect)
-		} else {
-
-			http.Redirect(resp, req, "/reviews", 301)
-			//resp.Header().Set("Location", "/")
 		}
+
 	} else {
 		gothic.BeginAuthHandler(resp, req)
 
@@ -228,6 +212,9 @@ func (hdl *LoginController) GothCallBack(resp http.ResponseWriter, req *http.Req
 		fmt.Fprintln(resp, err)
 	}
 
-	resp.Header().Set("Location", "/")
-	log.Printf("User :%v", user)
+	log.Printf("User :%v", user.Name)
+	//resp.Header().Set("Location", "/")
+
+	t, _ := template.New("foo").Parse(userTemplate)
+	t.Execute(resp, user)
 }
