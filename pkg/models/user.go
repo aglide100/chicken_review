@@ -17,7 +17,7 @@ type ProviderUser struct {
 	Email             string
 	Name              string
 	FirstName         string
-	LastEName         string
+	LastName          string
 	NickName          string
 	Description       string
 	UserID            string
