@@ -15,17 +15,15 @@ import (
 	"github.com/aglide100/chicken_review_webserver/pkg/db"
 	"github.com/aglide100/chicken_review_webserver/pkg/models"
 	"github.com/aglide100/chicken_review_webserver/pkg/views"
-	"github.com/gorilla/sessions"
 )
 
 type ReviewController struct {
 	db      *db.Database
-	store   *sessions.CookieStore
 	APIKeys *models.APIKeys
 }
 
-func NewReviewController(db *db.Database, store *sessions.CookieStore, APIKeys *models.APIKeys) *ReviewController {
-	return &ReviewController{db: db, store: store, APIKeys: APIKeys}
+func NewReviewController(db *db.Database, APIKeys *models.APIKeys) *ReviewController {
+	return &ReviewController{db: db, APIKeys: APIKeys}
 }
 
 func findString(resp http.ResponseWriter, req *http.Request, str string) (id int, orderType string, pagenumber int) {

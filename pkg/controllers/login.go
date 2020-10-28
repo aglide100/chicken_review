@@ -8,20 +8,19 @@ import (
 	"github.com/aglide100/chicken_review_webserver/pkg/db"
 	"github.com/aglide100/chicken_review_webserver/pkg/models"
 	"github.com/aglide100/chicken_review_webserver/pkg/views"
-	"github.com/gorilla/sessions"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 )
 
 type LoginController struct {
-	db        *db.Database
-	store     *sessions.CookieStore
-	Providers *goth.Providers
+	db          *db.Database
+	sessionCtrl *SessionController
+	Providers   *goth.Providers
 }
 
-func NewLoginController(db *db.Database, store *sessions.CookieStore) *LoginController {
+func NewLoginController(db *db.Database, sessionCtrl *SessionController) *LoginController {
 
-	return &LoginController{db: db, store: store}
+	return &LoginController{db: db, sessionCtrl: sessionCtrl}
 }
 
 func (hdl *LoginController) Register_Page(resp http.ResponseWriter, req *http.Request) {
@@ -64,8 +63,8 @@ func (hdl *LoginController) Register(resp http.ResponseWriter, req *http.Request
 func (hdl *LoginController) LoginCheck(resp http.ResponseWriter, req *http.Request) {
 	log.Printf("[login_func]: receive request to LoginCheck")
 
-	if SessionControl(hdl, resp, req, nil, nil, "check", "nil") == "nil" {
-
+	if hdl.sessionCtrl.GetSession(resp, req) == "true" {
+		log.Printf("find Session data")
 	}
 
 	view := views.NewReviewLoginView(views.DefaultBaseHTMLContext)
@@ -75,39 +74,6 @@ func (hdl *LoginController) LoginCheck(resp http.ResponseWriter, req *http.Reque
 		log.Printf("faild to render : %v", err)
 	}
 
-}
-
-func SessionControl(hdl *LoginController, resp http.ResponseWriter, req *http.Request, user *models.User, providerUser *models.ProviderUser, set string, UserType string) string {
-	if set == "save" {
-		session, _ := hdl.store.Get(req, "session-name")
-		if UserType == "Goth" {
-			session.Values["UserID"] = providerUser.UserID
-			session.Values["Name"] = providerUser.Name
-		} else {
-			session.Values["UserID"] = user.UserID
-			session.Values["Name"] = user.Name
-		}
-		session.Save(req, resp)
-		return "saved"
-	} else if set == "check" {
-		session, _ := hdl.store.Get(req, "session-name")
-		log.Println(session.Values["Name"])
-		if session.Values["Name"] == nil {
-			log.Println("[Login]: there are no session!")
-			return "check_err"
-		}
-		return "checked"
-	} else if set == "remove" {
-		sessions, err := hdl.store.Get(req, "session-name")
-		if err != nil {
-			fmt.Errorf("Can't get session!", err)
-		}
-		delete(sessions.Values, "UserID")
-		delete(sessions.Values, "Name")
-		sessions.Save(req, resp)
-		return "removed"
-	}
-	return "default"
 }
 
 /* Check Local User */
@@ -124,7 +90,7 @@ func (hdl *LoginController) LogIn(resp http.ResponseWriter, req *http.Request) {
 	}
 	//gob.Register(&models.User{})
 
-	SessionControl(hdl, resp, req, User, nil, "save", "Local")
+	hdl.sessionCtrl.SaveSession(resp, req, User, nil, "Local")
 	log.Printf("save session, id: %v pwd: %v", UserID, UserPWD)
 
 	// Goauth 와 로컬 유저 체크 하는 로직 넣기
@@ -191,6 +157,7 @@ func (hdl *LoginController) GothLogOut(resp http.ResponseWriter, req *http.Reque
 	log.Printf("[login_func]: receive request to logout gothUser")
 	gothic.Logout(resp, req)
 
+	hdl.sessionCtrl.RemoveSession(resp, req)
 	resp.Header().Set("Location", "/reviews")
 	resp.WriteHeader(http.StatusTemporaryRedirect)
 }
@@ -206,9 +173,8 @@ func (hdl *LoginController) GothCallBack(resp http.ResponseWriter, req *http.Req
 	log.Printf("User :%v, %v, %v", user.Name, user.NickName, user.Email)
 	//resp.Header().Set("Location", "/")
 	pUser := GothUserChangeToPuser(&user)
-	SessionControl(hdl, resp, req, nil, nil, "remove", "")
-
-	SessionControl(hdl, resp, req, nil, pUser, "save", "Goth")
+	hdl.sessionCtrl.RemoveSession(resp, req)
+	hdl.sessionCtrl.SaveSession(resp, req, nil, pUser, "Goth")
 	http.Redirect(resp, req, "/reviews", 301)
 	//resp.Header().Set("Location", "/reviews")
 }

@@ -49,7 +49,7 @@ func main() {
 
 var store = sessions.NewCookieStore(securecookie.GenerateRandomKey(32))
 
-func redirect(w http.ResponseWriter, req *http.Request) {
+func redirect(resp http.ResponseWriter, req *http.Request) {
 	// for Using html5 function, so redirect to https connection
 	var target string
 	if hostHTTPSport == "443" {
@@ -61,7 +61,7 @@ func redirect(w http.ResponseWriter, req *http.Request) {
 		target += "?" + req.URL.RawQuery
 	}
 	log.Printf("redirect to: %s", target)
-	http.Redirect(w, req, target, 301)
+	http.Redirect(resp, req, target, 301)
 }
 
 func realMain() error {
@@ -75,6 +75,7 @@ func realMain() error {
 		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), callbackAddr+"/auth/callback?provider=google"),
 	)
 
+	sessions.NewSession(store, "session-name")
 	gothic.Store = sessions.NewCookieStore([]byte("11233243453"))
 	// add Api keys(GoogleMaps)
 	APIKeys := &models.APIKeys{
@@ -91,14 +92,16 @@ func realMain() error {
 
 	defaultCtrl := &controllers.DefaultController{}
 	notFoundCtrl := &controllers.NotFoundController{}
-	loginCtrl := controllers.NewLoginController(myDB, store)
-	reviewsCtrl := controllers.NewReviewController(myDB, store, APIKeys)
+	reviewsCtrl := controllers.NewReviewController(myDB, APIKeys)
+	sessionCtrl := controllers.NewSessionController(store)
+	ajaxCtrl := controllers.NewAjaxController(myDB, sessionCtrl)
+	loginCtrl := controllers.NewLoginController(myDB, sessionCtrl)
 
 	rtr := router.NewRouter(notFoundCtrl)
 
-	sessions.NewSession(store, "session-name")
-
 	rtr.AddRule("default", "GET", "^/$", defaultCtrl.ServeHTTP)
+
+	rtr.AddRule("ajax", "GET", "^/ajax", ajaxCtrl.AjaxHandler)
 
 	rtr.AddRule("login", "GET", "^/login/register_page$", loginCtrl.Register_Page)
 	rtr.AddRule("login", "POST", "^/login/sign_up", loginCtrl.Register)

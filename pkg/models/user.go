@@ -7,6 +7,7 @@ type User struct {
 	UserPWD     string
 	Name        string
 	Addr        string
+	Email       string
 	PhoneNumber string
 	Language    string
 }
