@@ -16,6 +16,7 @@ import (
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/google"
+	"github.com/markbates/goth/providers/kakao"
 	"github.com/markbates/goth/providers/naver"
 
 	"github.com/aglide100/chicken_review_webserver/pkg/db"
@@ -73,6 +74,7 @@ func realMain() error {
 	goth.UseProviders(
 		naver.New(os.Getenv("NAVER_KEY"), os.Getenv("NAVER_SECRET"), callbackAddr+"/auth/callback?provider=naver"),
 		google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), callbackAddr+"/auth/callback?provider=google"),
+		kakao.New(os.Getenv("KAKAO_KEY"), os.Getenv("KAKAO_SECRET"), callbackAddr+"/auth/callback?provider=kakao"),
 	)
 
 	sessions.NewSession(store, "session-name")

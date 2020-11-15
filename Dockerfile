@@ -1,12 +1,21 @@
 FROM golang:1.14 AS builder
 
-ADD . "/go/src/github.com/aglide100/chicken_review_webserver"
+COPY . "/go/src/github.com/aglide100/chicken_review_webserver"
 WORKDIR "/go/src/github.com/aglide100/chicken_review_webserver/"
 
 RUN mkdir -p /opt/bin/webd/
 RUN mkdir -p /var/lib/webd/
 
-RUN go build -mod=vendor -o /opt/bin/webd/webd ./cmd/webd
+#COPY go.mod .
+#COPY go.sum .
+
+RUN go mod vendor \
+    && go get -u -d -v ./...
+#RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-s' /opt/bin/webd/webd ./cmd/webd
+
+RUN go build -mod=mod -o /opt/bin/webd/webd ./cmd/webd
+
+
 RUN cp -r ui /var/lib/webd/
 RUN cp -r pkg /var/lib/webddo
 
