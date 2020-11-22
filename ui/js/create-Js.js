@@ -56,7 +56,6 @@ function initMap(lat, lon) {
     } else {
         //console.log(lat, lon);
         var locPositions = new kakao.maps.LatLng(lat,lon);
-        searchAddrFromCoords(locPositions, changeKeyword)
         
         //displayMarkerz(locPositions, "find!");
         searchMap(locPositions);
@@ -73,6 +72,7 @@ function changeKeyword(result, status) {
             if (result[i].region_type === 'H') {
                 infoDiv.value = result[i].address_name;
                 console.log("현 위치 : ", result[i].address_name);
+                return result[i].address_name;
                 break;
             }
         }
@@ -105,19 +105,27 @@ function searchMap(locPositions) {
     // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
     infowindow = new kakao.maps.InfoWindow({zIndex:1});
 
-    // 키워드로 장소를 검색합니다
-    searchPlaces();
+    searchAddrFromCoords(locPositions, changeKeyword)
 
+    // 키워드로 장소를 검색합니다
+    searchPlaces(locPositions);
+    
+   
+    removeAnimationBlock();
 }
 
 // 키워드 검색을 요청하는 함수입니다
-function searchPlaces() {
+function searchPlaces(locPositions) {
 
     var keyword = document.getElementById('keyword').value;
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         alert('키워드를 입력해주세요!');
         return false;
+    }
+
+    if (keyword == "치킨") {
+        keyword = searchAddrFromCoords(locPositions, changeKeyword);
     }
 
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
@@ -134,6 +142,7 @@ function placesSearchCB(data, status, pagination) {
 
         // 페이지 번호를 표출합니다
         displayPagination(pagination);
+
         
 
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
@@ -329,7 +338,13 @@ function displayMarker(locPosition, message) {
     
     // 지도 중심좌표를 접속위치로 변경합니다
     map.setCenter(locPosition);      
-}    
+}
+
+function removeAnimationBlock() {
+    removeAnimationBlockFunc();
+    reloadLayout();
+}
+
 
 
 

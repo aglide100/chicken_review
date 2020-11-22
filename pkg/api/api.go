@@ -46,4 +46,6 @@ func (hdl *AjaxController) SessionLogOut(resp http.ResponseWriter, req *http.Req
 	if err != nil {
 		log.Printf("err!")
 	}
+
+	http.Redirect(resp, req, "/", 301)
 }

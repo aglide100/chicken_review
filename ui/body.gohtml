@@ -1,20 +1,20 @@
 {{define "login_nav_view"}}
-    {{if .CheckUser}}
+    {{if and (eq .CheckUser.Email "<empty>") (eq .CheckUser.Name "<empty>") (eq .CheckUser.UserID "<empty>")}}
         <li>
-            {{if eq .CheckUser.Email "<empty>"}}
-                <a href="/mypage">{{.CheckUser.Name}}</a>
-                <a href="/logout"></a>
-            {{else}}
-                <a href="/mypage">{{.CheckUser.Email}}</a>
-                <a href="/logout"></a>    
-            {{end}}
-
+            <a href="/login">Login</a>
             <a href="/reviews">Home</a>
             <a href="/reviews/create">Create</a>
         </li>
     {{else}}
         <li>
-            <a href="/login">Login</a>
+            {{if eq .CheckUser.Email "<empty>"}}
+                <a href="/mypage">{{.CheckUser.Name}}</a>
+                <a href="/logout" id="log_out">logout</a>
+            {{else}}
+                <a href="/mypage">{{.CheckUser.Email}}</a>
+                <a href="/logout" id="log_out">logout</a>    
+            {{end}}
+
             <a href="/reviews">Home</a>
             <a href="/reviews/create">Create</a>
         </li>

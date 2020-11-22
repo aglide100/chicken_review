@@ -116,6 +116,7 @@ func realMain() error {
 	rtr.AddRule("login", "POST", "^/login/sign_up", loginCtrl.Register)
 
 	rtr.AddRule("login", "GET", "^/login", loginCtrl.LoginCheck)
+	rtr.AddRule("login", "GET", "^/logout", ajaxCtrl.SessionLogOut)
 	rtr.AddRule("login", "POST", "^/login/log_In", loginCtrl.LogIn)
 	rtr.AddRule("login", "GET", "^/login/log_Out", loginCtrl.LogOut)
 

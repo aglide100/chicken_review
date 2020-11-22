@@ -18,7 +18,7 @@ $(document).ready(function(){
 
     $(".log_out").click(function() {
         $.ajax({
-            url: "/log_out",
+            url: "/logOut",
             type: "get",
             dataType:"json",
             success: function(data){
