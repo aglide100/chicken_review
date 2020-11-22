@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"text/template"
 
 	"github.com/aglide100/chicken_review_webserver/pkg/models"
@@ -65,7 +66,9 @@ func (htmlctx *BaseHTMLContext) RenderUsing(w io.Writer, contentPattern string, 
 		return fmt.Errorf("parsing reviews html: %v", err)
 	}
 
+	log.Printf("Parse body contetn and checkUser....")
 	html := htmlctx.HTML(bodyContent, CheckUser)
+	log.Printf("Parse success!")
 	if err := contentT.ExecuteTemplate(w, "html", html); err != nil {
 		return fmt.Errorf("executing template: %v", err)
 	}

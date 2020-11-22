@@ -1,0 +1,76 @@
+{{define "login_nav_view"}}
+    {{if .CheckUser}}
+        <li>
+            {{if eq .CheckUser.Email "<empty>"}}
+                <a href="/mypage">{{.CheckUser.Name}}</a>
+                <a href="/logout"></a>
+            {{end}}
+
+            <a href="/reviews">Home</a>
+            <a href="/reviews/create">Create</a>
+        </li>
+    {{else}}
+        <li>
+            <a href="/login">Login</a>
+            <a href="/reviews">Home</a>
+            <a href="/reviews/create">Create</a>
+        </li>
+    {{end}}
+
+{{end}}
+
+{{define "body"}}
+
+<body>
+    <div class="body">
+    <!-- Logo article start -->
+    <div class="headlight">
+            <h2 onclick="location.href = '/'";>Chicken review</h2>
+            <h5>We eat, and review Chickens</h5>
+    </div>
+    <!-- Logo article end -->
+
+
+    <!-- Navigation article start -->
+
+    <!-- nav for dekstop or bigger start -->
+    <div class="nav">
+        <nav class="desc">
+            {{template "login_nav_view" .}}
+        </nav>
+    </div>
+    <!-- nav for dekstop or bigger end -->
+
+    <!-- nav for mobile start -->
+    <div class="mobile_nav">Menu</div>
+    <nav class="mobile_desc">
+        {{template "login_nav_view" .}}
+    </nav>
+    <!-- nav for mobile end -->
+
+    <!-- Navigation article end -->
+
+
+    <!-- Content article start -->
+    <article class="content">
+        {{block "content" .Content}}
+    {{/* This is shown if nothing overrides the "content" block. */}}
+    <h1>Oups...!</h1>
+    <p>There is no content to display. You shouldn't see this page!</p>
+    {{end}}
+    </article>
+    <!-- Content article end -->
+
+    </div>
+
+    <!-- Footer article start -->
+    <div class="open_footer">Check footer</div>
+    <article class="footer">
+        <hr>
+        <p>Copyright 2020. ~~~~~ All picture cannot be copied without permission.</p>
+    </article>
+    <!-- Footer article end -->
+    
+</body>
+
+{{end}}

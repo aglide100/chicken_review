@@ -38,18 +38,24 @@ var (
 	dbName          = os.Getenv("DB_NAME")
 	callbackAddr    = os.Getenv("CALLBACK_ADDR")
 	KakaoMaps       = os.Getenv("KAKAO_MAPS_API_KEYS")
+	sessionKey      = []byte(os.Getenv("SESSIONKEY"))
 )
 
 func main() {
 	// return to https connection
-	go http.ListenAndServe(":"+hostHTTPport, http.HandlerFunc(redirect))
+	//go http.ListenAndServe(":"+hostHTTPport, http.HandlerFunc(redirect))
+
+	if os.Getenv("SESSIONKEY") == "" {
+		sessionKey = securecookie.GenerateRandomKey(32)
+		log.Printf("Can't find session key! please input session key!!!")
+	}
 
 	if err := realMain(); err != nil {
 		log.Fatal(err)
 	}
 }
 
-var store = sessions.NewCookieStore(securecookie.GenerateRandomKey(32))
+var store = sessions.NewCookieStore(sessionKey)
 
 func redirect(resp http.ResponseWriter, req *http.Request) {
 	// for Using html5 function, so redirect to https connection
@@ -79,7 +85,7 @@ func realMain() error {
 	)
 
 	sessions.NewSession(store, "session-name")
-	gothic.Store = sessions.NewCookieStore([]byte("11233243453"))
+	gothic.Store = sessions.NewCookieStore(sessionKey)
 	// add Api keys(GoogleMaps)
 	APIKeys := &models.APIKeys{
 		KakaoMaps: KakaoMaps,

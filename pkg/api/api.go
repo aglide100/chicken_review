@@ -41,6 +41,9 @@ func (hdl *AjaxController) AjaxHandler(resp http.ResponseWriter, req *http.Reque
 	resp.Write(a)
 }
 
-func (hdl *AjaxController) SessionLogOut(resp http.ResponseWriter) {
-	hdl.sessionCtrl.RemoveSession()
+func (hdl *AjaxController) SessionLogOut(resp http.ResponseWriter, req *http.Request) {
+	err := hdl.sessionCtrl.RemoveSession(resp, req)
+	if err != nil {
+		log.Printf("err!")
+	}
 }

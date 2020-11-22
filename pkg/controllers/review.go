@@ -432,6 +432,7 @@ func (hdl *ReviewController) List(resp http.ResponseWriter, req *http.Request) {
 	}
 
 	CheckUser := hdl.SessionController.GetUserDataInSession(req)
+	log.Printf("CheckUser: %v", CheckUser)
 	view := views.NewReviewListView(views.DefaultBaseHTMLContext, reviews, CheckUser)
 	resp.Header().Set("Content-Type", view.ContentType())
 	err = view.Render(resp)
