@@ -46,7 +46,7 @@ func (hdl *SessionController) GetSession(resp http.ResponseWriter, req *http.Req
 	}
 }
 
-func (hdl *SessionController) GetUserDataInSession(resp http.ResponseWriter, req *http.Request) *models.User {
+func (hdl *SessionController) GetUserDataInSession(req *http.Request) *models.User {
 	session, err := hdl.store.Get(req, "session-name")
 	if err != nil {
 		fmt.Errorf("Can't get session!")

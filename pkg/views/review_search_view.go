@@ -7,12 +7,13 @@ import (
 )
 
 type reviewSearchView struct {
-	htmlctx BaseHTMLContext
-	reviews []*models.Review
+	htmlctx   BaseHTMLContext
+	reviews   []*models.Review
+	CheckUser *models.User
 }
 
-func NewReviewSearchView(htmlctx BaseHTMLContext, reviews []*models.Review) View {
-	return &reviewSearchView{htmlctx: htmlctx, reviews: reviews}
+func NewReviewSearchView(htmlctx BaseHTMLContext, reviews []*models.Review, CheckUser *models.User) View {
+	return &reviewSearchView{htmlctx: htmlctx, reviews: reviews, CheckUser: CheckUser}
 }
 
 func (view reviewSearchView) ContentType() string {
@@ -20,5 +21,5 @@ func (view reviewSearchView) ContentType() string {
 }
 
 func (view reviewSearchView) Render(w io.Writer) error {
-	return view.htmlctx.RenderUsing(w, "ui/reviews/search.gohtml", view.reviews)
+	return view.htmlctx.RenderUsing(w, "ui/reviews/search.gohtml", view.reviews, view.CheckUser)
 }

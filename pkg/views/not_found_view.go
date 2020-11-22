@@ -1,6 +1,10 @@
 package views
 
-import "io"
+import (
+	"io"
+
+	"github.com/aglide100/chicken_review_webserver/pkg/models"
+)
 
 //NotFoundView struct
 type NotFoundView struct {
@@ -17,6 +21,11 @@ func NewNotFoundView(htmlctx BaseHTMLContext) View {
 
 // sended notFoundHTML
 func (view NotFoundView) Render(w io.Writer) error {
-	return view.htmlctx.RenderUsing(w, "ui/defaults/404.gohtml", nil)
+	CheckUser := &models.User{
+		Name:   "",
+		UserID: "",
+		Email:  "",
+	}
+	return view.htmlctx.RenderUsing(w, "ui/defaults/404.gohtml", nil, CheckUser)
 
 }

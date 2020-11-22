@@ -18,12 +18,13 @@ import (
 )
 
 type ReviewController struct {
-	db      *db.Database
-	APIKeys *models.APIKeys
+	db                *db.Database
+	APIKeys           *models.APIKeys
+	SessionController *SessionController
 }
 
-func NewReviewController(db *db.Database, APIKeys *models.APIKeys) *ReviewController {
-	return &ReviewController{db: db, APIKeys: APIKeys}
+func NewReviewController(db *db.Database, APIKeys *models.APIKeys, SessionController *SessionController) *ReviewController {
+	return &ReviewController{db: db, APIKeys: APIKeys, SessionController: SessionController}
 }
 
 func findString(resp http.ResponseWriter, req *http.Request, str string) (id int, orderType string, pagenumber int) {
@@ -116,7 +117,8 @@ func (hdl *ReviewController) GetImage(resp http.ResponseWriter, req *http.Reques
 func (hdl *ReviewController) Create(resp http.ResponseWriter, req *http.Request) {
 	log.Printf("[review_func]: receive request to create a review")
 
-	view := views.NewReviewCreateView(views.DefaultBaseHTMLContext, hdl.APIKeys)
+	CheckUser := hdl.SessionController.GetUserDataInSession(req)
+	view := views.NewReviewCreateView(views.DefaultBaseHTMLContext, hdl.APIKeys, CheckUser)
 
 	resp.Header().Set("Content-Type", view.ContentType())
 	err := view.Render(resp)
@@ -140,7 +142,8 @@ func (hdl *ReviewController) Revise(resp http.ResponseWriter, req *http.Request)
 	if !ok {
 		view = views.NewNotFoundView(views.DefaultBaseHTMLContext)
 	} else {
-		view = views.NewReviewUpdateView(views.DefaultBaseHTMLContext, review)
+		CheckUser := hdl.SessionController.GetUserDataInSession(req)
+		view = views.NewReviewUpdateView(views.DefaultBaseHTMLContext, review, CheckUser)
 	}
 
 	resp.Header().Set("Content-Type", view.ContentType())
@@ -382,8 +385,8 @@ func (hdl *ReviewController) Search(resp http.ResponseWriter, req *http.Request)
 		http.Error(resp, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	view := views.NewReviewSearchView(views.DefaultBaseHTMLContext, reviews)
+	CheckUser := hdl.SessionController.GetUserDataInSession(req)
+	view := views.NewReviewSearchView(views.DefaultBaseHTMLContext, reviews, CheckUser)
 	resp.Header().Set("Content-Type", view.ContentType())
 	err = view.Render(resp)
 	if err != nil {
@@ -406,7 +409,8 @@ func (hdl *ReviewController) Get(resp http.ResponseWriter, req *http.Request) {
 	if !ok {
 		view = views.NewNotFoundView(views.DefaultBaseHTMLContext)
 	} else {
-		view = views.NewReviewShowView(views.DefaultBaseHTMLContext, review, hdl.APIKeys)
+		CheckUser := hdl.SessionController.GetUserDataInSession(req)
+		view = views.NewReviewShowView(views.DefaultBaseHTMLContext, review, hdl.APIKeys, CheckUser)
 	}
 	resp.Header().Set("Content-Type", view.ContentType())
 	err = view.Render(resp)
@@ -427,20 +431,11 @@ func (hdl *ReviewController) List(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	view := views.NewReviewListView(views.DefaultBaseHTMLContext, reviews)
+	CheckUser := hdl.SessionController.GetUserDataInSession(req)
+	view := views.NewReviewListView(views.DefaultBaseHTMLContext, reviews, CheckUser)
 	resp.Header().Set("Content-Type", view.ContentType())
 	err = view.Render(resp)
 	if err != nil {
 		log.Printf("failed to render : %v", err)
-	}
-}
-
-func (hdl *ReviewController) Temp(resp http.ResponseWriter, req *http.Request) {
-	log.Print("Get temp html")
-	view := views.NewReviewGetTempView(views.DefaultBaseHTMLContext)
-	resp.Header().Set("Content-Type", view.ContentType())
-	err := view.Render(resp)
-	if err != nil {
-		log.Printf("failed")
 	}
 }

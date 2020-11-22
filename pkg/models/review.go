@@ -11,4 +11,6 @@ type Review struct {
 	ID                int64
 	PictureURLs       []string
 	DefaultPictureURL string
+	Lat               interface{}
+	Lng               interface{}
 }

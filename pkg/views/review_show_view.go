@@ -7,13 +7,14 @@ import (
 )
 
 type reviewShowView struct {
-	htmlctx BaseHTMLContext
-	review  *models.Review
-	APIKeys *models.APIKeys
+	htmlctx   BaseHTMLContext
+	review    *models.Review
+	CheckUser *models.User
+	APIKeys   *models.APIKeys
 }
 
-func NewReviewShowView(htmlctx BaseHTMLContext, review *models.Review, APIKeys *models.APIKeys) View {
-	return &reviewShowView{htmlctx: htmlctx, review: review, APIKeys: APIKeys}
+func NewReviewShowView(htmlctx BaseHTMLContext, review *models.Review, APIKeys *models.APIKeys, CheckUser *models.User) View {
+	return &reviewShowView{htmlctx: htmlctx, review: review, APIKeys: APIKeys, CheckUser: CheckUser}
 }
 
 func (view reviewShowView) ContentType() string {
@@ -22,5 +23,9 @@ func (view reviewShowView) ContentType() string {
 
 func (view reviewShowView) Render(w io.Writer) error {
 	//view.review.GoogleMapsApi = view.APIKeys.GoogleMaps
-	return view.htmlctx.RenderUsing(w, "ui/reviews/show.gohtml", view.review)
+	Content := &models.Content{
+		APIKeys: view.APIKeys,
+		Review:  view.review,
+	}
+	return view.htmlctx.RenderUsing(w, "ui/reviews/show.gohtml", Content, view.CheckUser)
 }

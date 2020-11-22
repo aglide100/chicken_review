@@ -1,5 +1,7 @@
 package ui
 
+import "github.com/aglide100/chicken_review_webserver/pkg/models"
+
 type HTML struct {
 	Head Head
 	Body Body
@@ -16,7 +18,8 @@ type Head struct {
 }
 
 type Body struct {
-	Content interface{}
+	Content   interface{}
+	CheckUser *models.User
 }
 
 type Lang struct {

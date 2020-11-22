@@ -7,12 +7,13 @@ import (
 )
 
 type reviewCreateView struct {
-	htmlctx BaseHTMLContext
-	APIKeys *models.APIKeys
+	htmlctx   BaseHTMLContext
+	APIKeys   *models.APIKeys
+	CheckUser *models.User
 }
 
-func NewReviewCreateView(htmlctx BaseHTMLContext, APIKeys *models.APIKeys) View {
-	return &reviewCreateView{htmlctx: htmlctx, APIKeys: APIKeys}
+func NewReviewCreateView(htmlctx BaseHTMLContext, APIKeys *models.APIKeys, CheckUser *models.User) View {
+	return &reviewCreateView{htmlctx: htmlctx, APIKeys: APIKeys, CheckUser: CheckUser}
 }
 
 func (view reviewCreateView) ContentType() string {
@@ -20,6 +21,6 @@ func (view reviewCreateView) ContentType() string {
 }
 
 func (view reviewCreateView) Render(w io.Writer) error {
-	return view.htmlctx.RenderUsing(w, "ui/reviews/create.gohtml", view.APIKeys)
+	return view.htmlctx.RenderUsing(w, "ui/reviews/create.gohtml", view.APIKeys, view.CheckUser)
 
 }

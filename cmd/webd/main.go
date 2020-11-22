@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/aglide100/chicken_review_webserver/pkg/api"
 	"github.com/aglide100/chicken_review_webserver/pkg/controllers"
 	"github.com/aglide100/chicken_review_webserver/pkg/models"
 	"github.com/aglide100/chicken_review_webserver/pkg/router"
@@ -94,9 +95,9 @@ func realMain() error {
 
 	defaultCtrl := &controllers.DefaultController{}
 	notFoundCtrl := &controllers.NotFoundController{}
-	reviewsCtrl := controllers.NewReviewController(myDB, APIKeys)
 	sessionCtrl := controllers.NewSessionController(store)
-	ajaxCtrl := controllers.NewAjaxController(myDB, sessionCtrl)
+	reviewsCtrl := controllers.NewReviewController(myDB, APIKeys, sessionCtrl)
+	ajaxCtrl := api.NewAjaxController(sessionCtrl)
 	loginCtrl := controllers.NewLoginController(myDB, sessionCtrl)
 
 	rtr := router.NewRouter(notFoundCtrl)

@@ -1,11 +1,11 @@
-package controllers
+package api
 
 import (
 	"encoding/json"
 	"log"
 	"net/http"
 
-	"github.com/aglide100/chicken_review_webserver/pkg/db"
+	"github.com/aglide100/chicken_review_webserver/pkg/controllers"
 )
 
 type User struct {
@@ -15,12 +15,11 @@ type User struct {
 }
 
 type AjaxController struct {
-	db          *db.Database
-	sessionCtrl *SessionController
+	sessionCtrl *controllers.SessionController
 }
 
-func NewAjaxController(db *db.Database, sessionCtrl *SessionController) *AjaxController {
-	return &AjaxController{db: db, sessionCtrl: sessionCtrl}
+func NewAjaxController(sessionCtrl *controllers.SessionController) *AjaxController {
+	return &AjaxController{sessionCtrl: sessionCtrl}
 }
 
 func (hdl *AjaxController) AjaxHandler(resp http.ResponseWriter, req *http.Request) {
@@ -40,4 +39,8 @@ func (hdl *AjaxController) AjaxHandler(resp http.ResponseWriter, req *http.Reque
 		http.Error(resp, err.Error(), http.StatusInternalServerError)
 	}
 	resp.Write(a)
+}
+
+func (hdl *AjaxController) SessionLogOut(resp http.ResponseWriter) {
+	hdl.sessionCtrl.RemoveSession()
 }

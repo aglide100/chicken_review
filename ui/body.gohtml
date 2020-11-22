@@ -1,3 +1,24 @@
+{{define "login_nav_view"}}
+    {{if .CheckUser}}
+        <li>
+            {{if eq .CheckUser.Email ""}}
+                <a href="/mypage">{{.CheckUser.Email}}</a>
+                <a href="/logout"></a>
+            {{end}}
+
+            <a href="/reviews">Home</a>
+            <a href="/reviews/create">Create</a>
+        </li>
+    {{else}}
+        <li>
+            <a href="/login">Login</a>
+            <a href="/reviews">Home</a>
+            <a href="/reviews/create">Create</a>
+        </li>
+    {{end}}
+
+{{end}}
+
 {{define "body"}}
 
 <body>
@@ -15,11 +36,7 @@
     <!-- nav for dekstop or bigger start -->
     <div class="nav">
         <nav class="desc">
-            <li>
-                <a href="/login">Login</a>
-                <a href="/reviews">Home</a>
-                <a href="/reviews/create">Create</a>
-            </li>
+            
         </nav>
     </div>
     <!-- nav for dekstop or bigger end -->

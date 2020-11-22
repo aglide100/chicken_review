@@ -2,6 +2,8 @@ package views
 
 import (
 	"io"
+
+	"github.com/aglide100/chicken_review_webserver/pkg/models"
 )
 
 type reviewLoginView struct {
@@ -17,6 +19,12 @@ func (view reviewLoginView) ContentType() string {
 }
 
 func (view reviewLoginView) Render(w io.Writer) error {
-	return view.htmlctx.RenderUsing(w, "ui/reviews/login.gohtml", nil)
+	CheckUser := &models.User{
+		UserID: "",
+		Name:   "",
+		Email:  "",
+	}
+
+	return view.htmlctx.RenderUsing(w, "ui/reviews/login.gohtml", nil, CheckUser)
 	// if (check status) -> view.htmlctx.RenderUsing(w, "ui/reviews/login_status.gohtml", nil)
 }

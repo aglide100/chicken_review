@@ -1,6 +1,10 @@
 package views
 
-import "io"
+import (
+	"io"
+
+	"github.com/aglide100/chicken_review_webserver/pkg/models"
+)
 
 type RegisterView struct {
 	htmlctx BaseHTMLContext
@@ -15,5 +19,10 @@ func NewRegisterView(htmlctx BaseHTMLContext) View {
 }
 
 func (view RegisterView) Render(w io.Writer) error {
-	return view.htmlctx.RenderUsing(w, "ui/reviews/register.gohtml", nil)
+	CheckUser := &models.User{
+		Name:   "",
+		Email:  "",
+		UserID: "",
+	}
+	return view.htmlctx.RenderUsing(w, "ui/reviews/register.gohtml", nil, CheckUser)
 }
