@@ -9,8 +9,6 @@ var infowindow;
 var locPosition;
 var lat, lon;
 
-// 주소-좌표 변환 객체를 생성합니다
-var geocoder = new kakao.maps.services.Geocoder();
 
 window.addEventListener('DOMContentLoaded', function(){ 
     document.getElementById('write_date').value= new Date().toISOString().slice(0, -1);
@@ -71,8 +69,11 @@ function changeKeyword(result, status) {
             // 행정동의 region_type 값은 'H' 이므로
             if (result[i].region_type === 'H') {
                 infoDiv.value = result[i].address_name;
-                console.log("현 위치 : ", result[i].address_name);
-                return result[i].address_name;
+                console.log("현 위치 : ", infoDiv.value);
+
+                if (callbackFunc != null && typeof callbackFunc == "function") {
+                    callbackFunc();
+                }
                 break;
             }
         }
@@ -80,8 +81,13 @@ function changeKeyword(result, status) {
 }
 
 
+
 function searchAddrFromCoords(coords, callback) {
     // 좌표로 행정동 주소 정보를 요청합니다
+
+    // 주소-좌표 변환 객체를 생성합니다
+    var geocoder = new kakao.maps.services.Geocoder();
+
     geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
 }
 
@@ -105,8 +111,6 @@ function searchMap(locPositions) {
     // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
     infowindow = new kakao.maps.InfoWindow({zIndex:1});
 
-    searchAddrFromCoords(locPositions, changeKeyword)
-
     // 키워드로 장소를 검색합니다
     searchPlaces(locPositions);
     
@@ -114,10 +118,12 @@ function searchMap(locPositions) {
     removeAnimationBlock();
 }
 
+let callbackFunc;
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces(locPositions) {
 
     var keyword = document.getElementById('keyword').value;
+    console.log("keyword: ", keyword);
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         alert('키워드를 입력해주세요!');
@@ -125,11 +131,18 @@ function searchPlaces(locPositions) {
     }
 
     if (keyword == "치킨") {
-        keyword = searchAddrFromCoords(locPositions, changeKeyword);
-    }
+        callbackFunc = function() {
+            keyword =  document.getElementById('keyword').value + " 치킨";
+            console.log("위치 검색 후 : ", keyword);
+            ps.keywordSearch( keyword, placesSearchCB); 
+            callbackFunc = null;
+        }
 
-    // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-    ps.keywordSearch( keyword, placesSearchCB); 
+        searchAddrFromCoords(locPositions, changeKeyword);
+    } else {
+        // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+        ps.keywordSearch( keyword, placesSearchCB); 
+    }
 }
 
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
