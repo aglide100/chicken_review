@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    $("#author").val($("#CheckUser").val());
+
 
     function removeAnimationBlock() {
 
@@ -14,28 +16,33 @@ $(document).ready(function(){
     $(".search_box").click(function(){
         
             if( $(".map_wrap").is(":visible") ) {
-                $(".map_wrap").slideUp();
+                KakaoMapClose();
             } else {
                 $('html').scrollTop(0);
                 $(".map_wrap").slideDown('fast', function() {
                     //getLoacation();
+                    
+                    $('html, body').addClass('hidden');
+                    $('body').addClass('scrollDisable').on('scroll touchmove mousewheel', function(e){
+                        e.preventDefault();
+                    });
+
                     newLocation();
                 });
             }
-            
-        /*
-        $.when( ShowMap() ).done(function() {
-            setTimeout(function() {
-                reloadLayout();
-              }, 1000);
-            
-        });
-        */
+           
     });
-    
+
+    function KakaoMapClose() {
+        if( $(".map_wrap").is(":visible") ) {
+            $(".map_wrap").slideUp();
+            $('body').removeClass('scrollDisable').off('scroll touchmove mousewheel');
+            $('body').css({"overflow":"scroll"});
+        }
+    }
     
 
     $(".close_kakaomap").click(function(){
-        $(".map_wrap").slideUp();
+        KakaoMapClose();
     })
 })

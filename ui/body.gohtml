@@ -7,6 +7,8 @@
         </li>
     {{else}}
         <li>
+            <a href="/reviews">Home</a>
+            <a href="/reviews/create">Create</a>
             {{if eq .CheckUser.Email "<empty>"}}
                 <a href="/mypage">{{.CheckUser.Name}}</a>
                 <a href="/logout" id="log_out">logout</a>
@@ -14,9 +16,6 @@
                 <a href="/mypage">{{.CheckUser.Email}}</a>
                 <a href="/logout" id="log_out">logout</a>    
             {{end}}
-
-            <a href="/reviews">Home</a>
-            <a href="/reviews/create">Create</a>
         </li>
     {{end}}
 
@@ -37,6 +36,19 @@
     <!-- Navigation article start -->
 
     <!-- nav for dekstop or bigger start -->
+    {{if and (eq .CheckUser.Email "<empty>") (eq .CheckUser.Name "<empty>") (eq .CheckUser.UserID "<empty>")}}
+        <input id="CheckUser" value="<empty>" style="display:none">
+    {{else}}
+        {{if eq .CheckUser.Email "<empty>"}}
+            {{if eq .CheckUser.Name "<empty>"}}
+                <input id="CheckUser" value="{{.CheckUser.UserID}}" style="display:none">
+            {{else}}
+                <input id="CheckUser" value="{{.CheckUser.Name}}" style="display:none">
+            {{end}}
+        {{else}}
+            <input id="CheckUser" value="{{.CheckUser.Email}}" style="display:none">
+        {{end}}
+    {{end}}
     <div class="nav">
         <nav class="desc">
             {{template "login_nav_view" .}}

@@ -46,7 +46,7 @@ func (rtr *Router) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 		if !rule.pattern.MatchString(path) {
 			continue
 		}
-		log.Printf("found handler: %q", rule.name)
+		log.Printf("found handler: %q, %v", rule.name, path)
 		handler := rule.handler
 		handler.ServeHTTP(resp, req)
 		return

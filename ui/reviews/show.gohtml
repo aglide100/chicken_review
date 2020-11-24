@@ -1,6 +1,6 @@
 
 {{define "img_view"}}
-    {{range $pictures := .PictureURLs}}
+    {{range $pictures := .Review.PictureURLs}}
         <div class="swiper-slide">
             <img src="{{$pictures}}" onerror="document.getElementById(this.id).remove()" onclick="window.open('{{$pictures}}', 'popup'); return false;"/>
         </div>
@@ -10,8 +10,8 @@
 {{define "show_view"}}
 <article class="content"]>
     <header class="header">
-        <h2>StoreName : {{.StoreName}}</h2>
-        <h2>{{.Title}}</h2>
+        <h2>StoreName : {{.Review.StoreName}}</h2>
+        <h2>{{.Review.Title}}</h2>
 
 
     <!-- Swiper -->
@@ -27,19 +27,21 @@
     </header>
     
     <div class="details">
-        <summary>Details</summary>
         
-        <p>Phone Number : {{.PhoneNumber}}</p>
+        <div id="map" style="width:100%;height:350px;"></div>
+
+        
+        <p>Phone Number : {{.Review.PhoneNumber}}</p>
         <p>Location : 
         <div id="map_canvas" style="width:50%; height:15%;"></div>
         </p>
-        <h3>{{.Title}}</h3>
-        {{.Comment}}
+        <h3>{{.Review.Title}}</h3>
+        {{.Review.Comment}}
     </div>
-    <p>posted on <time datetime={{.Date}}>{{.Date}}</time> by {{.Author}}</p>
+    <p>posted on <time datetime={{.Review.Date}}>{{.Review.Date}}</time> by {{.Review.Author}}</p>
  
     <div>
-        <button type="button" onclick="location.href = '/update/{{.ID}}'">Update review </button>
+        <button type="button" onclick="location.href = '/update/{{.Review.ID}}'">Update review </button>
         <button type="button" onclick="deleteReview()">Delete review</button>
     </div>
 </article>
@@ -49,19 +51,13 @@
 {{define "content"}}
 <link rel="stylesheet" href="/reviews/ui/css/show.css">
 <script src="/reviews/ui/assets/swiper/swiper-bundle.js"></script>
-<!--
-<script src="/reviews/ui/assets/swiper/swiper-bundle.min.js"></script>
--->
 <link rel="stylesheet" href="/reviews/ui/assets/swiper/swiper-bundle.css">
-<!--
-<link rel="stylesheet" href="/reviews/ui/assets/swiper/swiper-bundle.min.css">
--->
 <!--
 <script src="/reviews/ui/js/show.js"></script>
 -->
 
 {{template "show_view" .}}
 
-
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{.APIKeys.KakaoMaps}}"></script>
 <script src="/reviews/ui/js/show-Js.js"></script>
 {{end}}
