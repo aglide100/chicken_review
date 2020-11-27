@@ -200,14 +200,22 @@ function displayPlaces(places) {
         // 마커와 검색결과 항목에 mouseover 했을때
         // 해당 장소에 인포윈도우에 장소명을 표시합니다
         // mouseout 했을 때는 인포윈도우를 닫습니다
-        (function(marker, title) {
+        (function(marker, title, places, i) {
             kakao.maps.event.addListener(marker, 'mouseover', function() {
                 displayInfowindow(marker, title);
             });
 
-            kakao.maps.event.addListener(marker, 'mouseout', function() {
-                infowindow.close();
+            kakao.maps.event.addEventListener(marker, 'click', function() {
+                displayConfrimwindow(marker, title, places[i].address_name, places[i].phone);
             });
+
+            //kakao.maps.event.addListener(marker, 'mouseout', function() {
+            //    infowindow.close();
+            //});
+
+            itemEl.onclick = function () {
+                displayConfrimwindow(marker, title);
+            };
 
             itemEl.onmouseover =  function () {
                 displayInfowindow(marker, title);
@@ -321,6 +329,15 @@ function displayInfowindow(marker, title) {
     infowindow.setContent(content);
     infowindow.open(map, marker);
 }
+
+function displayConfrimwindow(marker, title, address_name, phone) {
+    var content = '<div style="padding:5px;z-index:1;">' + title + '</div><div>'+address_name + '</div><div>'+phone + '</div>';
+
+    infowindow.setContent(content);
+    infowindow.open(map, marker);
+}
+
+
 
  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
 function removeAllChildNods(el) {   
