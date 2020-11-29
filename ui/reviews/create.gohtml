@@ -28,12 +28,12 @@
     
     <div>
         <p>Store's name</p>
-        <input name="store_name" placeholder="ABC">
+        <input name="store_name" id="store_name" placeholder="ABC">
     </div>
 
     <div>
         <p>Store's PhoneNumber</p>
-        <input type="tel" name="phone_number" placeholder="000-000-0000"> 
+        <input type="tel" name="phone_number" id="phone_number" placeholder="000-000-0000"> 
     </div>
 
     <div>
@@ -76,8 +76,9 @@
     <div>
         <!--<input type="hidden" id="csrfToken" value='{{.CsrfFiled}}'/>-->
         <input type="date" name="write_date" id="write_date"style="display:none">
-        <input name="lat" style="display:none">
-        <input name="lng" style="display:none">
+        <input name="lat" id="lat" style="display:none">
+        <input name="lng" id="lng" style="display:none">
+        <input name="addr" id="addr" style="display:none">
     </div>
 </form>
 {{end}}

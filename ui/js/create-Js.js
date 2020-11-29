@@ -188,6 +188,7 @@ function displayPlaces(places) {
     
     for ( var i=0; i<places.length; i++ ) {
 
+
         // 마커를 생성하고 지도에 표시합니다
         var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
             marker = addMarker(placePosition, i), 
@@ -200,13 +201,13 @@ function displayPlaces(places) {
         // 마커와 검색결과 항목에 mouseover 했을때
         // 해당 장소에 인포윈도우에 장소명을 표시합니다
         // mouseout 했을 때는 인포윈도우를 닫습니다
-        (function(marker, title, places, i) {
+        (function(marker, title, addr, tel, lat,lng) {
             kakao.maps.event.addListener(marker, 'mouseover', function() {
                 displayInfowindow(marker, title);
             });
 
-            kakao.maps.event.addEventListener(marker, 'click', function() {
-                displayConfrimwindow(marker, title, places[i].address_name, places[i].phone);
+            kakao.maps.event.addListener(marker, 'click', function() {
+                displayConfrimwindow(marker, title, addr, tel, lat,lng);
             });
 
             //kakao.maps.event.addListener(marker, 'mouseout', function() {
@@ -214,7 +215,7 @@ function displayPlaces(places) {
             //});
 
             itemEl.onclick = function () {
-                displayConfrimwindow(marker, title);
+                displayConfrimwindow(marker, title, addr, tel, lat, lng);
             };
 
             itemEl.onmouseover =  function () {
@@ -224,7 +225,7 @@ function displayPlaces(places) {
             itemEl.onmouseout =  function () {
                 infowindow.close();
             };
-        })(marker, places[i].place_name);
+        })(marker, places[i].place_name, places[i].address_name, places[i].phone, places[i].y, places[i].x);
 
         fragment.appendChild(itemEl);
     }
@@ -330,13 +331,38 @@ function displayInfowindow(marker, title) {
     infowindow.open(map, marker);
 }
 
-function displayConfrimwindow(marker, title, address_name, phone) {
-    var content = '<div style="padding:5px;z-index:1;">' + title + '</div><div>'+address_name + '</div><div>'+phone + '</div>';
+function displayConfrimwindow(marker, title, address_name, tel, lat,lng) {
+    var content = '<div style="padding:5px;z-index:1;">'+ '<div> <div onclick="mapsConfrim()">이 곳이 맞습니까?</div><div onclick="mapsCancel()">취소</div></div>' +'</div>';
+    console.log("넘겨받은 파라미터: " ,title, address_name, tel, lat,lng)
+    infowindow.close(); // 기존에 infowindows 닫기
+    var infowindows = new kakao.maps.InfoWindow({
+        content: content,
+        removable: true
+    });
 
-    infowindow.setContent(content);
-    infowindow.open(map, marker);
+    document.getElementById('store_name').value = title;
+    document.getElementById('phone_number').value = tel;
+    document.getElementById('addr').value = address_name;
+    document.getElementById('lat').value = lat;
+    document.getElementById('lng').value = lng;
+
+    infowindows.setContent(content);
+    infowindows.open(map, marker);
 }
 
+function mapsConfrim() {
+    alert("confrim!");
+    closeKaKaoMaps(true);
+}
+
+function mapsCancel() {
+    infowindows.close();
+    document.getElementById('store_name').value = "";
+    document.getElementById('phone_number').value = "";
+    document.getElementById('addr').value = "";
+    document.getElementById('lat').value = "";
+    document.getElementById('lng').value = "";
+}
 
 
  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
@@ -373,6 +399,10 @@ function displayMarker(locPosition, message) {
 function removeAnimationBlock() {
     removeAnimationBlockFunc();
     reloadLayout();
+}
+
+function closeKaKaoMaps(param) {
+    KakaoMapCloseFunc(param);
 }
 
 

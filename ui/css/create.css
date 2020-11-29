@@ -1,5 +1,5 @@
         /* Using Class*/
-    .hidden {
+    .blockScroll {
         overflow:hidden !important; 
     }
     #loading_animation_block {
@@ -13,8 +13,11 @@
     #loading_animation {
         width: 5vw;
         height: 5vw;
-        margin-top: 45%;
-        margin-left: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        
+        
         border: 3px solid rgba(255,255,255,.3);
         border-radius: 50%;
         border-top-color: #fff;

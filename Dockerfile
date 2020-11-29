@@ -24,12 +24,6 @@ FROM debian:stretch-slim AS runtime
 COPY --from=builder /opt/bin/webd/webd /opt/bin/webd/webd
 COPY --from=builder /var/lib/webd /var/lib/webd
 
-# For Using ssl certification and reqeust https api 
-# add ca list in Docker container
-# Change mirro to  http://mirror.kakao.com/debian/
-#RUN cd /etc/apt && \
-#       sed -i 's/archive.ubuntu.com/ftp.kr.debian.org/debian/' sources.list 
-       #sed -i 's/archive.ubuntu.com/http://mirror.kakao.com/debian/' sources.list.d/proposed.list
 RUN apt update && apt install -y ca-certificates
 RUN chmod 644 /usr/local/share/ca-certificates && update-ca-certificates
 

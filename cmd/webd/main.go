@@ -57,6 +57,7 @@ func main() {
 
 var store = sessions.NewCookieStore(sessionKey)
 
+/*
 func redirect(resp http.ResponseWriter, req *http.Request) {
 	// for Using html5 function, so redirect to https connection
 	var target string
@@ -71,6 +72,7 @@ func redirect(resp http.ResponseWriter, req *http.Request) {
 	log.Printf("redirect to: %s", target)
 	http.Redirect(resp, req, target, 301)
 }
+*/
 
 func realMain() error {
 	log.Printf("start realMain")
