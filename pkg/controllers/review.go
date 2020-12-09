@@ -332,7 +332,7 @@ func SaveReview(resp http.ResponseWriter, req *http.Request, hdl *ReviewControll
 	case "Save":
 
 	case "Update":
-
+		//aaa
 	}
 	log.Printf("세이브 체크 1,", review.Lat, review.Lng)
 	return review, nil, false, ""
