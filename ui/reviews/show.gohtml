@@ -29,7 +29,7 @@
     <div class="details">
         
         <p>Phone Number : {{.Review.PhoneNumber}}</p>
-        {{if eq .Review.Addr ""}}
+        {{if and (eq .Review.Lat "<no value>") (eq .Review.Lng "<no value>")}}
             <!-- empty! -->
         {{else}}
             <input name="lat" id="lat" value="{{.Review.Lat}}" style="display:none">

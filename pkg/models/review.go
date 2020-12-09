@@ -12,6 +12,6 @@ type Review struct {
 	PictureURLs       []string
 	DefaultPictureURL string
 	Addr              string
-	Lat               interface{}
-	Lng               interface{}
+	Lat               string
+	Lng               string
 }

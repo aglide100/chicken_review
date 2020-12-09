@@ -234,14 +234,16 @@ SELECT
 	PhoneNumber, 
 	Comment, 
 	Score,
+	Addr,
 	Lat,
-	Lng,
-	Addr
+	Lng
 FROM review
 WHERE
 	ID=$1
 	`
-
+	var addr sql.NullString
+	var lat sql.NullString
+	var lng sql.NullString
 	review := new(models.Review)
 
 	err := db.conn.QueryRow(q, id).Scan(
@@ -255,9 +257,9 @@ WHERE
 		&review.PhoneNumber,
 		&review.Comment,
 		&review.Score,
-		&review.Lat,
-		&review.Lng,
-		&review.Addr,
+		&addr,
+		&lat,
+		&lng,
 	)
 	if err == sql.ErrNoRows {
 		return nil, false, nil
@@ -265,6 +267,10 @@ WHERE
 	if err != nil {
 		return nil, false, fmt.Errorf("querying: %v", err)
 	}
+	review.Addr = addr.String
+	review.Lat = lat.String
+	review.Lng = lng.String
+	log.Printf("세이브 체크2, ", review.Lat, review.Lng)
 
 	return review, true, nil
 }
