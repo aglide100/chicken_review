@@ -233,7 +233,10 @@ SELECT
 	Date, 
 	PhoneNumber, 
 	Comment, 
-	Score
+	Score,
+	Lat,
+	Lng,
+	Addr
 FROM review
 WHERE
 	ID=$1
@@ -251,7 +254,11 @@ WHERE
 		&review.Date,
 		&review.PhoneNumber,
 		&review.Comment,
-		&review.Score)
+		&review.Score,
+		&review.Lat,
+		&review.Lng,
+		&review.Addr,
+	)
 	if err == sql.ErrNoRows {
 		return nil, false, nil
 	}

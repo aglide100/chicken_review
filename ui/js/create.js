@@ -38,8 +38,8 @@ $(document).ready(function(){
                 $("#store_name").val("");
                 $("#phone_number").val("");
                 $("#addr").val("");
-                $("#lat").val("");
-                $("#lng").val("");
+                $("#lat").val("<empty>");
+                $("#lng").val("<empty>");
             }
 
             $('body').removeClass('blockScroll');

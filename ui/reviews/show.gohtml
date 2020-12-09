@@ -28,14 +28,18 @@
     
     <div class="details">
         
-        <div id="map" style="width:100%;height:350px;"></div>
-
-        
         <p>Phone Number : {{.Review.PhoneNumber}}</p>
-        <p>Location : 
-        <div id="map_canvas" style="width:50%; height:15%;"></div>
-        </p>
+        {{if eq .Review.Addr ""}}
+            <!-- empty! -->
+        {{else}}
+            <input name="lat" id="lat" value="{{.Review.Lat}}" style="display:none">
+            <input name="lng" id="lng" value="{{.Review.Lng}}" style="display:none">
+            <p>Location : 
+            <div id="map_canvas" style="width:50%; height:15%;"></div>
+            </p>
+        {{end}}
         <h3>{{.Review.Title}}</h3>
+        
         {{.Review.Comment}}
     </div>
     <p>posted on <time datetime={{.Review.Date}}>{{.Review.Date}}</time> by {{.Review.Author}}</p>

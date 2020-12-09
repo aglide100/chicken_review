@@ -277,6 +277,9 @@ func SaveReview(resp http.ResponseWriter, req *http.Request, hdl *ReviewControll
 		"author",
 		"title",
 		"comment",
+		"lat",
+		"lng",
+		"addr",
 	}
 
 	blacklist := [...]string{
@@ -286,6 +289,7 @@ func SaveReview(resp http.ResponseWriter, req *http.Request, hdl *ReviewControll
 		"<script>",
 		"<style>",
 		"$func",
+		"<empty>",
 	}
 
 	review := &models.Review{
@@ -297,18 +301,29 @@ func SaveReview(resp http.ResponseWriter, req *http.Request, hdl *ReviewControll
 		DefaultPictureURL: path,
 		PictureURLs:       PictureURLs,
 		Comment:           req.PostFormValue("comment"),
+		Lat:               req.PostFormValue("lat"),
+		Lng:               req.PostFormValue("lng"),
+		Addr:              req.PostFormValue("addr"),
 		//UpdateDate:        req.PostFormValue("write_date"),
 	}
 
-	checklistnum := 6
-	blacklistnum := 6
+	checklistnum := 9
+	blacklistnum := 7
 
 	// Check blakclist
 	for i := 0; i < checklistnum; i++ {
 		for k := 0; k < blacklistnum; k++ {
 			// Check threat
+			if (checklist[i] == "lat") || (checklist[i] == "lng") || (checklist[i] == "addr") {
+				if blacklist[k] == "<empty>" {
+					continue
+					// skip
+				}
+			}
 			result := strings.Replace(req.PostFormValue(checklist[i]), blacklist[k], "Alert", -1)
+
 			if result != req.PostFormValue(checklist[i]) {
+				log.Printf("When saving review, found alert!")
 				return nil, err, true, result
 			}
 		}

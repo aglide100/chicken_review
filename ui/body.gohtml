@@ -10,8 +10,13 @@
             <a href="/reviews">Home</a>
             <a href="/reviews/create">Create</a>
             {{if eq .CheckUser.Email "<empty>"}}
-                <a href="/mypage">{{.CheckUser.Name}}</a>
-                <a href="/logout" id="log_out">logout</a>
+                {{if eq .CheckUser.Name "<empty>"}}
+                    <a href="/mypage">{{.CheckUser.UserID}}</a>
+                    <a href="/logout" id="log_out">logout</a>
+                {{else}}
+                    <a href="/mypage">{{.CheckUser.Name}}</a>
+                    <a href="/logout" id="log_out">logout</a>
+                {{end}}
             {{else}}
                 <a href="/mypage">{{.CheckUser.Email}}</a>
                 <a href="/logout" id="log_out">logout</a>    

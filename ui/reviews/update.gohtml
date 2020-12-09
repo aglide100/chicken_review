@@ -1,95 +1,91 @@
 {{define "update_view"}}
-<form action="/reviews/update/upload/" method="post" name="storeForm">
-
-<h3>Title : {{.Title}}, ID : {{.ID}}</h3>
-<h3 class="create_title">Please input info</h3>
-<p>
-    <!--<h6>Store's name</h6>-->
-    <input name="store_name" placeholder="Store's name">
-</p>
-<p>
-    <!--<h6>Store's PhoneNumber</h6>-->
-    <input type="tel" name="phone_number" placeholder="Store's PhoneNumber">
-</p>
-<p>
-    Location
-    <input type="hidden"/>
-<p>
-    Date<br><br>
-    <input type="date" name="date" id="date">
-    <input type="datetime" name="write_date" id="write_date" style="visibility: hidden;">
-</p>
-<p>
-    Store's picture<br><br>
-    <input type="file" name="image"  accept="image/x-png,image/gif,image/jpeg" >
-</p>
-<p>
-    <!--<h6>Author</h6>-->
-    <input type="text" name="author" placeholder="Author">
-</p>
-<p>
-    <!--<h6>Title</h6>-->
-    <input type="text" name="title" maxlength="80" placeholder="Title">
-</p>
-<p>
-    <!--<h6>Comment</h6>-->
-    <textarea rows="10" cols="50" name="comment" placeholder="Comment">
-
-    </textarea>
-</p>
-<p>
-    <input type="submit" value="Submit" onclick=Submit() class="form_btn">
-    <input type="button" onclick="location.href = '/reviews'"; value="Cancel" class="form_btn"/>
-</p>
-</form>
-<button onclick="location.href = '/reviews/{{.ID}}'";>Cancel</button>
-<script>
-    document.getElementById('write_date').value= new Date().toISOString().slice(0, -1);
-    //document.getElementById('date').value=new Date().toISOString().substring(0,10);
-
-
-
-    function Submit() {
-        alert("sending....");
-        document.storeForm.submit();
-    }
-
-</script>
-
-<style type="text/css" media="screen">
-
-        .storeForm {
-            background-color: rgba(93, 93, 93, 0.4);
-            -moz-border-radius: 7px;
-            -webkit-border-radius: 7px;
-        }
-
-        .storeForm p {
-            margin: 3% 8% auto;
-        }
-
-        .storeForm input {
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            -ms-box-sizing: border-box;
-            box-sizing: border-box;
-            border: 3px solid rgba(0,0,0,0);    
-        }
-
-        .create_title {
-           padding: 3%;
-        }
-
-        .form_btn {
-            margin: auto auto 5%;
-        }
-
+ <div class="map_wrap">
+        <div id="loading_animation_block">
+            <div id="loading_animation"></div>
+        </div>
+        <div id="map" class="map"></div>
         
-</style>
+        <div id="menu_wrap" class="bg_white">
 
+            <div class="close_kakaomap">지도 닫기</div>
+            <div class="option">
+                <div>
+                    <div>
+                        키워드 : <input type="text" value="치킨" id="keyword" size="15"> 
+                        <div onclick="searchPlaces();">검색하기</div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <ul id="placesList"></ul>
+            <div id="pagination"></div>
+        </div>
+</div>
 
+<form enctype="multipart/form-data" action="/reviews/update/upload" method="post" name="storeForm" class="storeForm" >
+    <h3 class="create_title">Please input info</h3>
+    
+    <div>
+        <p>Store's name</p>
+        <input name="store_name" id="store_name" value=".Content.Review.StoreName">
+    </div>
+
+    <div>
+        <p>Store's PhoneNumber</p>
+        <input type="tel" name="phone_number" id="phone_number" value=".Content.Review.PhoneNumber" placeholder="000-000-0000"> 
+    </div>
+
+    <div>
+        <p>Location</p>
+        <div class="search_box">Search box</div>
+       
+    </div>
+
+    <div>
+        <p>Date</p>
+        <input type="date" name="date" id="date">
+    </div>
+
+    <div>
+        <p>Store's picture</p>
+        <input type="file" name="image" accept="image/x-png,image/gif,image/jpeg,image/png" multiple>
+    </div>
+
+    <div>
+        <p>Author</p>
+        <input type="text" name="author" id="author" placeholder="Author">
+    </div>
+
+    <div>
+        <p>Title</p>
+        <input type="text" name="title" maxlength="80" value=".Content.Review.Title" placeholder="Title">
+    </div>
+
+    <div>
+        <p>Comment</p>
+        <textarea rows="10" cols="50" name="comment" value=".Content.Review.Comment" placeholder="Comment">
+        </textarea>
+    </div>
+
+    <div class="form_btn">
+        <input type="submit" value="Submit" onclick="Submit()">
+        <input type="button" onclick="location.href = '/reviews';" value="Cancel">
+    </div>
+
+    <div>
+        <!--<input type="hidden" id="csrfToken" value='{{.CsrfFiled}}'/>-->
+        <input type="date" name="write_date" id="write_date"style="display:none">
+        <input name="lat" id="lat" style="display:none" value=".Content.Review.Lat">
+        <input name="lng" id="lng" style="display:none" value=".Content.Review.Lng">
+        <input name="addr" id="addr" style="display:none" value=".Content.Review.Addr">
+    </div>
+</form>
 {{end}}
 
 {{define "content"}}
+<link rel="stylesheet" href="/reviews/ui/css/create.css">
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{.Content.APIKeys.KakaoMaps}}&libraries=services"></script>
+<script src="/reviews/ui/js/create-Js.js"></script>
+<script src="/reviews/ui/js/create.js"></script>
 {{template "update_view" .}}
 {{end}}

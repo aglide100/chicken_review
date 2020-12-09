@@ -47,9 +47,8 @@ function newLocation(){
 
 function initMap(lat, lon) {
     if((lat == undefined) || (lon == undefined)) {
-        var locPosition = new kakao.maps.LatLng(40.450701, 100.570667),    
-        message = 'geolocation을 사용할수 없어요..'
-        console.log(message);
+        var locPosition = new kakao.maps.LatLng(40.450701, 100.570667);
+        alert("Can't Use Geolocation!");
         searchMap(locPosition);
     } else {
         //console.log(lat, lon);
@@ -207,7 +206,7 @@ function displayPlaces(places) {
             });
 
             kakao.maps.event.addListener(marker, 'click', function() {
-                displayConfrimwindow(marker, title, addr, tel, lat,lng);
+                displayConfrimwindow(marker, title, addr, tel, lat, lng);
             });
 
             //kakao.maps.event.addListener(marker, 'mouseout', function() {
@@ -360,8 +359,8 @@ function mapsCancel() {
     document.getElementById('store_name').value = "";
     document.getElementById('phone_number').value = "";
     document.getElementById('addr').value = "";
-    document.getElementById('lat').value = "";
-    document.getElementById('lng').value = "";
+    document.getElementById('lat').value = "<empty>";
+    document.getElementById('lng').value = "<empty>";
 }
 
 
