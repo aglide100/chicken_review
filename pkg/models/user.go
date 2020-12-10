@@ -10,6 +10,7 @@ type User struct {
 	Email       string
 	PhoneNumber string
 	Language    string
+	AvatarURL   string
 }
 
 type ProviderUser struct {

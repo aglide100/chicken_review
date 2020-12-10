@@ -32,11 +32,13 @@
         {{if and (eq .Review.Lat "<no value>") (eq .Review.Lng "<no value>")}}
             <!-- empty! -->
         {{else}}
+            {{.Review.Lat}}
+            {{.Review.Lng}}
             <input name="lat" id="lat" value="{{.Review.Lat}}" style="display:none">
             <input name="lng" id="lng" value="{{.Review.Lng}}" style="display:none">
-            <p>Location : 
+            <p>Location : </p>
             <div id="map_canvas" style="width:50%; height:15%;"></div>
-            </p>
+            
         {{end}}
         <h3>{{.Review.Title}}</h3>
         

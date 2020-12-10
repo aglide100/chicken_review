@@ -1,0 +1,22 @@
+{{define "mypage_view"}}
+<div>
+    <div>
+        <img src="{{.User.AvatarURL}}">
+        <div>{{.User.Name}}</div>
+    </div>
+
+    <div>
+
+    </div>
+
+
+    <div id="remove-account">Remove account</div>
+</div>
+
+{{end}}
+
+{{define "content"}}
+{{template "mypage_view"}}
+<script type="text/javascript" src="/reviews/ui/js/mypage.js"></script>
+<link rel="stylesheet" href="/reviews/ui/css/mypage.css">
+{{end}}

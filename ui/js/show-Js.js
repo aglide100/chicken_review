@@ -4,14 +4,13 @@ var lat = document.getElementById("lat").value;
 var lng = document.getElementById("lng").value;
 
 if ((lat == "") || (lng == "") || (lat == undefined) || (lng == undefined)){
-    // 혹시라도 지도가 표시될 경우
+    // 혹시라도 값은 없는데 지도가 표시될 경우
     lat = 33.450701;
     lng = 126.570667;
 }
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = { 
-        
         center: new kakao.maps.LatLng(lat, lng), // 지도의 중심좌표
         level: 3 // 지도의 확대 레벨
     };

@@ -1,8 +1,8 @@
-function Submit() {
+function SignIn() {
     document.loginForm.submit();
 }
 
-function GoToRegePage() {
+function SignUp() {
     location.href = '/login/register_page';
 }
 

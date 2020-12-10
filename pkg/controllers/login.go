@@ -93,8 +93,6 @@ func (hdl *LoginController) LogIn(resp http.ResponseWriter, req *http.Request) {
 	hdl.sessionCtrl.SaveSession(resp, req, User, nil, "Local")
 	log.Printf("save session, id: %v pwd: %v", UserID, UserPWD)
 
-	// Goauth 와 로컬 유저 체크 하는 로직 넣기
-
 	view := views.NewReviewLoginView(views.DefaultBaseHTMLContext)
 	resp.Header().Set("Content-Type", view.ContentType())
 	err := view.Render(resp)
@@ -106,7 +104,9 @@ func (hdl *LoginController) LogIn(resp http.ResponseWriter, req *http.Request) {
 func (hdl *LoginController) LogOut(resp http.ResponseWriter, req *http.Request) {
 	log.Printf("[login_func]: receive request to LogOut")
 
-	// 세션 지우기
+	hdl.sessionCtrl.RemoveSession(resp, req)
+	resp.Header().Set("Location", "/reviews")
+	resp.WriteHeader(http.StatusTemporaryRedirect)
 }
 
 /* Check Provider(Goauth) User */
@@ -118,7 +118,7 @@ func (hdl *LoginController) AuthGoth(resp http.ResponseWriter, req *http.Request
 		// parse user data
 		user := GothUserChangeToPuser(&usr)
 
-		err = hdl.db.RegisterNewGoauthUser(user)
+		err = hdl.db.RegisterNewProviderUser(user)
 		if err != nil {
 			log.Printf("Can't register Goauth User: %v", err)
 			http.Redirect(resp, req, "/reviews", 301)
@@ -173,6 +173,14 @@ func (hdl *LoginController) GothCallBack(resp http.ResponseWriter, req *http.Req
 	log.Printf("User :%v, %v, %v", user.Name, user.NickName, user.Email)
 	//resp.Header().Set("Location", "/")
 	pUser := GothUserChangeToPuser(&user)
+
+	err, ok := hdl.db.CheckProviderUser(pUser)
+	if err != nil {
+		// err check
+	}
+	if !ok {
+		hdl.db.RegisterNewProviderUser(pUser)
+	}
 	hdl.sessionCtrl.RemoveSession(resp, req)
 	hdl.sessionCtrl.SaveSession(resp, req, nil, pUser, "Goth")
 	http.Redirect(resp, req, "/reviews", 301)

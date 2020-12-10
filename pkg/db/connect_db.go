@@ -157,8 +157,11 @@ INSERT INTO review (
 	PhoneNumber,
 	Comment,
 	Score,
+	Addr,
+	Lat,
+	Lng,
 	PictureURLS
-) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`
 
 	res, err := db.conn.Exec(q,
 		newReview.Title,
@@ -169,6 +172,9 @@ INSERT INTO review (
 		newReview.PhoneNumber,
 		newReview.Comment,
 		newReview.Score,
+		newReview.Addr,
+		newReview.Lat,
+		newReview.Lng,
 		pq.Array(newReview.PictureURLs))
 	if err != nil {
 		return nil, fmt.Errorf("inserting: %v", err)
@@ -312,10 +318,22 @@ func (db *Database) RegisterNewUser(NewUser *models.User) error {
 	return nil
 }
 
-func (db *Database) RegisterNewGoauthUser(NewUser *models.ProviderUser) error {
+func (db *Database) RegisterNewProviderUser(NewUser *models.ProviderUser) error {
 	const q = `
-	
-	`
+INSERT INTO providerUser (
+
+) VALUES ()`
 
 	return nil
+}
+
+func (db *Database) GetUser() error {
+	return nil
+}
+
+func (db *Database) CheckProviderUser(CheckUser *models.ProviderUser) (error, bool) {
+	const q = `
+
+`
+	return nil, false
 }
